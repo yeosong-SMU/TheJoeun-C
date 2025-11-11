@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>고객 분류 시각화</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+body{
+	font-family: system-ui; 
+	margin:16px
+}
+
+.btn{
+	padding: 6px 10px; 
+	border: 1px solid #ccc; 
+	border: #fff; 
+	cursor:pointer;
+	margin-right: 6px
+}
+
+.row{margin: 10px 0}
+.hidden{display: none}
+
+.box{
+	padding: 8px;
+	border: 1px solid #ddd;
+	margin-top: 8px
+}
+
+canvas{max-width: 100%}
+</style>
+</head>
+<body>
+<div class="row">
+	<a class="btn" th:href="@{/}">목록</a>
+	<button class="btn" onclick="showChart('dist')">분포</button>
+	<button class="btn" onclick="showChart('incomeSpend')">소득-소비</button>
+	<button class="btn" onclick="showChart('ageSpend')">나이-소비</button>
+</div>
+
+<div class="box" id="chart-dist">
+	<canvas id="distCanvas" height="200"></canvas>
+</div>
+<div class="box hidden" id="chart-incomeSpend">
+	<canvas id="incomeSpendCanvas" height="200"></canvas>
+</div>
+<div class="box hidden" id="chart-ageSpend">
+	<canvas id="ageSpendCanvas" height="200"></canvas>
+</div>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+	const dist = /*[[${dist}]]*/ {};
+	const incomeSpendByCluster = /*[[${incomeSpendByCluster}]]*/ {};
+	const ageSpendByCluster = /*[[${ageSpendByCluster}]]*/ {};
+	const ks = Object.keys(dist).map(Number).sort((a, b) => a-b);
+	
+	let distChart, incomeSpendChart, ageSpendChart;
+	
+	(() => {
+		const ctx = document.getElementById('distCanvas');
+		const labels = ks;
+		const data = labels.map(k => dist[k] ?? 0);
+		distChart = new Chart(ctx, {
+			type: 'bar',
+			data: {labels, datasets: [{ label: 'count', data }] },
+			options: { responsive: true, plugins: { legend: { display: false } },
+				scales: { x: {title: {display:true, text:'cluster' }},
+					y: { beginAtZero: true, title: {display:true, text:'count'}}}}
+		});
+	})();
+	
+	(() => {
+		const ctx = document.getElementById('incomeSpendCanvas');
+		const datasets = Object.keys(incomeSpendByCluster)
+		.map(k => ({
+			label: `C${k}`, data: incomeSpendByCluster[k]
+		}));
+		incomeSpendChart = new Chart(ctx, {
+			type: 'scatter',
+			data: {datasets},
+			options: { responsive: true, scales: {
+				x: {title: {display:true, text:'income'}},
+				y: {title: {display:true, text:'spend'}},
+			}}
+		});
+	})();
+	
+	(() => {
+		const ctx = document.getElementById('ageSpendCanvas');
+		const datasets = Object.keys(ageSpendByCluster)
+		.map(k => ({
+			label: `C${k}`, data: ageSpendByCluster[k]
+		}));
+		ageSpendChart = new Chart(ctx, {
+			type: 'scatter',
+			data: {datasets},
+			options: { responsive: true, scales: {
+				x: {title: {display:true, text:'age'}},
+				y: {title: {display:true, text:'spend'}},
+			}}
+		});
+	})();
+	
+	function showChart(which) {
+		['dist', 'incomeSpend', 'ageSpend'].forEach(id => {
+			document.getElementById('chart-' + id)
+			.classList.toggle('hidden', id !== which);
+		});
+	}
+/*]]>*/
+</script>
+</body>
+</html>

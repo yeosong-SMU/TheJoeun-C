@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>회원 수정</title>
+</head>
+<body>
+<h2>회원 수정</h2>
+<form th:action="@{'/admin/members/' + ${memberId} + '/edit'}" method="post" th:object="${form}">
+	이름 : <input type="text" th:field="*{displayName}"><br>
+	권한 : <select th:field="*{role}">
+		<option value="USER">USER</option>
+		<option value="ADMIN">ADMIN</option>
+	</select><br>
+	<button type="submit">저장</button>
+</form>
+<p><a th:href="@{/admin/members}">목록</a></p>
+</body>
+</html>

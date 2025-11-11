@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>회원정보</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(function() {
+	$("#btnUpdate").click(function() {
+		document.form1.action = "/update.do";
+		document.form1.submit();
+	});
+	$("#btnDelete").click(function() {
+		if(confirm("삭제하시겠습니까?")) {
+			document.form1.action = "/delete.do";
+			document.form1.submit();
+		}
+	});
+});
+</script>
+</head>
+<body>
+<h2>회원정보</h2>
+<form name="form1" method="post">
+	<table border="1" width="400px">
+		<tr>
+			<td>아이디</td>
+			<td><input name="userid" th:value="${dto.userid}" readonly></td>
+		</tr>
+		<tr>
+			<td>비밀번호</td>
+			<td><input type="password" name="passwd"></td>
+		</tr>
+		<tr>
+			<td>이름</td>
+			<td><input name="name" th:value="${dto.name}"></td>
+		</tr>
+		<tr>
+			<td>이메일</td>
+			<td><input name="email" th:value="${dto.email}"></td>
+		</tr>
+		<tr>
+			<td>회원가입일자</td>
+			<td th:text="${#dates.format(dto.join_date, 'yyyy-MM-dd HH:mm:ss')}"></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center">
+				<input type="button" value="수정" id="btnUpdate">
+				<input type="button" value="삭제" id="btnDelete">
+				<div style="color: red" th:text="${message}"></div>
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

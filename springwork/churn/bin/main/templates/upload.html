@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSV 파일 업로드</title>
+</head>
+<body>
+<h1>CSV 파일 업로드</h1>
+
+<form id="uploadForm">
+	<label for="file">CSV 파일 업로드</label> <input type="file" id="file" name="file" required><br>
+	<br>
+	<button type="submit">업로드</button>
+</form>
+
+<a href="/churn">목록으로 돌아가기</a>
+
+<script>
+document.getElementById('uploadForm').addEventListener('submit', function(event) {
+	event.preventDefault();
+	
+	const fileInput =document.getElementById('file');
+	const file = fileInput.files[0];
+	
+	if(!file) {
+		alert('파일을 선택해 주세요.');
+		return;
+	}
+	
+	const formData = new FormData();
+	formData.append('file', file);
+	
+	fetch('http://localhost:5000/upload', {
+		method: 'POST',
+		body: formData
+	})
+	.then(uploadResponse => {
+		return uploadResponse.json();
+	})
+	.then(uploadResult => {
+		const predictUrl = new URL('http://localhost:5000/predict-csv');
+		
+		return fetch(predictUrl, {
+			method: 'GET'
+		});
+	})
+	.then(predictionResponse => {
+		if(!predictionResponse.ok) {
+			throw new Error('예측 요청 실패');
+		}
+		return predictionResponse.json();
+	})
+	
+	.then(result => {
+		console.log("result: " + JSON.stringify(result));
+		fetch('/churn/save-predictions', {
+			method: 'POST',
+			headers: {
+				'Content-Type' : 'application/json'
+			},
+			body: JSON.stringify(result)
+		});
+	})
+	.then(() => {
+		window.location.href='/'
+	});
+});
+</script>
+</body>
+</html>

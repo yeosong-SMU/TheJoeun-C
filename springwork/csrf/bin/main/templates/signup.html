@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta charset="UTF-8">
+<title>회원가입</title>
+</head>
+<body>
+<h1>회원가입(CSRF)</h1>
+<form th:action="@{/signup}" method="post" th:object="${member}">
+	<input type="text" th:field="*{userid}" placeholder="아이디"><br>
+	<input type="password" th:field="*{pwd}" placeholder="비밀번호"><br>
+	<input type="text" th:field="*{name}" placeholder="이름"><br>
+	<input type="hidden" name="_csrf" th:value="${_csrf}">
+	<button type="submit">가입</button>
+</form>
+
+<h1>회원가입(CSRF 없는 폼)</h1>
+<form th:action="@{/signup}" method="post" th:object="${member}">
+	<input type="text" th:field="*{userid}" placeholder="아이디"><br>
+	<input type="password" th:field="*{pwd}" placeholder="비밀번호"><br>
+	<input type="text" th:field="*{name}" placeholder="이름"><br>
+	<button type="submit">가입</button>
+</form>
+
+<p>
+	<a th:href="@{/}">홈으로</a>
+</p>
+</body>
+</html>

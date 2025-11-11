@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>채팅</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+<h2>실시간 상담</h2>
+
+<div style="margin-bottom:8px;">
+	닉네임 <input id="nick" value="guest" size="10">
+	메시지 <input id="msg" placeholder="메시지 입력" size="40">
+	<button id="sendBtn">보내기</button>
+</div>
+
+<div id="log" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+<script>
+	const ROOM = "myroom";
+	const WS_ENDPOINT = "/ws";
+	const SEND_DEST = `/app/send/${ROOM}`;
+	const SUB_TOPIC = `/topic/room/${ROOM}`;
+	const HISTORY_URL = `/api/history/${ROOM}`;
+	
+	let stomp = null;
+	
+	const $ = (id) => document.getElementById(id);
+	const logEl = $("log");
+	
+	function addMsg(m) {
+		const ts = (m.createdAt || new Date().toISOString()).replace("T", " ").slice(0, 19);
+		const row = document.createElement("div");
+		row.className = "row";
+		row.textContent = `[${ts}] ${m.nickname || "gest"}: ${m.content || ""}`;
+		logEl.appendChild(row);
+		logEl.scrollTop = logEl.scrollHeight;
+	}
+	
+	async function loadHistory() {
+		const res = await fetch(HISTORY_URL, { headers: {"Accept": "application/json"} });
+		const data = await res.json();
+		const arr = Array.isArray(data) ? data : (data && Array.isArray(data.content) ? data.content : []);
+		logEl.innerHTML = "";
+		arr.forEach(addMsg);
+	}
+	
+	function connect() {
+		const socket = new SockJS(WS_ENDPOINT);
+		stomp = Stomp.over(socket);
+		stomp.debug = null;
+		stomp.connect({}, async () => {
+			await loadHistory();
+			stomp.subscribe(SUB_TOPIC, (frame) => {
+				addMsg(JSON.parse(frame.body));
+			});
+		});
+	}
+	
+	function send() {
+		const nickname = $("nick").value.trim() || "guest";
+		const content = $("msg").value.trim();
+		if(!content || !stomp || !stomp.connected) return;
+		stomp.send(SEND_DEST, {"content-type" : "application/json"}, JSON.stringify({nickname, content}));
+		$("msg").value = "";
+		$("msg").focus();
+	}
+	
+	$("sendBtn").onclick = send;
+	$("msg").addEventListener("keydown", (e) => { if (e.key === "Enter") send(); });
+	
+	connect();
+</script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>고객 문의 수정</title>
+<script>
+function confirmDelete() {
+	if (confirm("삭제하시겠습니까?")) {
+		location.href="/delete/" + document.getElementById("id").value;
+	}
+}
+</script>
+</head>
+<body>
+<h1>고객 문의 수정</h1>
+
+<form th:action="@{/update/{id}(id=${customerQuery.id})}" method="post">
+	<input type="hidden" th:value="${customerQuery.id}" id="id" name="id">
+	
+	문의내용: <br>
+	<textarea id="text" name="text" rows="5" cols="50" required th:text="${customerQuery.text}"></textarea>
+	<br>
+	
+	분류:
+	<select id="label" name="label">
+		<option value="결제" th:selected="${customerQuery.label == '결제'}">결제</option>
+		<option value="배송" th:selected="${customerQuery.label == '배송'}">배송</option>
+		<option value="상품" th:selected="${customerQuery.label == '상품'}">상품</option>
+		<option value="환불" th:selected="${customerQuery.label == '환불'}">환불</option>
+		<option value="계정" th:selected="${customerQuery.label == '계정'}">계정</option>
+		<option value="기타" th:selected="${customerQuery.label == '기타'}">기타</option>
+	</select>
+	<br>
+	
+	긴급도: 
+	<select id="urgencyClass" name="urgencyClass">
+		<option value="긴급" th:selected="${customerQuery.urgencyClass == '긴급'}">긴급</option>
+		<option value="보통" th:selected="${customerQuery.urgencyClass == '보통'}">보통</option>
+	</select>
+	<br><br>
+	
+	<button type="submit">수정</button>
+	<button type="button" class="delete-btn" onclick="confirmDelete()">삭제</button>
+	<button type="button" onclick="location.href='/'">목록</button>
+</form>
+</body>
+</html>

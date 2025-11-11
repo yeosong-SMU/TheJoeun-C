@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/mylayout}">
+<th:block layout:fragment="content">
+<script>
+function deleteOrder(orderIdx, status) {
+	if(confirm("삭제하시겠습니까?")) {
+		location.href="/order/delete/" + orderIdx;
+	}
+}
+function changeStatus(orderIdx) {
+	document.form1.orderIdx.value=orderIdx;
+	document.form1.action="/order/change_status";
+	document.form1.submit();
+}
+</script>
+<div class="container">
+<h2 class="text-center">주문목록</h2>
+<table class="table table-hover">
+	<tr>
+		<td>이름</td>
+		<td>주문일시</td>
+		<td>주문금액</td>
+		<td>결제방식</td>
+		<td>배송주소</td>
+		<td>상태</td>
+	</tr>
+	<tr th:each="row:${list}">
+		<td>[[${row.member.name}]]</td>
+		<td><a th:href="@{/order/detail/}+${row.orderIdx}">[[${#dates.format(row.orderDate, 'yyyy-MM-dd HH:mm:ss')}]]</a></td>
+		<td>[[${row.totalMoney}]]</td>
+		<td>[[${row.method}]]</td>
+		<td>[[${row.address1}]] [[${row.address2}]] ( [[${row.zipcode}]] )</td>
+		<td>
+			<span th:if="${session.level < 10}">[[${row.status}]]</span>
+			<select th:if="${session.level == 10}" name="status" onchange="document.form1.status.value=this.value;">
+				<option value="주문접수" th:selected="${row.status == '주문접수'}">주문접수</option>
+				<option value="주문취소요청" th:selected="${row.status == '주문취소요청'}">주문취소요청</option>
+				<option value="주문취소완료" th:selected="${row.status == '주문취소완료'}">주문취소완료</option>
+				<option value="배송중" th:selected="${row.status == '배송중'}">배송중</option>
+				<option value="배송완료" th:selected="${row.status == '배송완료'}">배송완료</option>
+			</select>
+			<button type="button" th:if="${session.level == 10}" class="btn btn-info" th:onclick="changeStatus(this.getAttribute('data'))" th:data="${row.orderIdx}">상태변경</button>
+			<button type="button" th:if="${session.level == 10}" class="btn btn-danger" th:onclick="deleteOrder(this.getAttribute('data'))" th:data="${row.orderIdx}">삭제</button>
+		</td>
+	</tr>
+</table>
+</div>
+<form method="post" name="form1">
+	<input type="hidden" name="status">
+	<input type="hidden" name="orderIdx">
+</form>
+</th:block>
+</html>

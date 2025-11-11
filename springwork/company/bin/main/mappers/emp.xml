@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.company.EmpDAO">
+	<select id="list" resultType="com.example.company.EmpDTO">
+		select empno, ename, job, to_char(hiredate, 'YYYY-MM-DD') hiredate, sal, d.dname, e.deptno
+		from emp e, dept d
+		where e.deptno = d.deptno
+		order by e.ename, e.hiredate
+	</select>
+	
+	<insert id="insert">
+		insert into emp (empno, ename, job, hiredate, sal, deptno)
+		values (#{empno}, #{ename}, #{job}, #{hiredate}, #{sal}, #{deptno})
+	</insert>
+	
+	<select id="detail" resultType="com.example.company.EmpDTO">
+		select empno, ename, job, to_char(hiredate, 'YYYY-MM-DD') hiredate, sal, deptno
+		from emp
+		where empno = #{empno}
+	</select>
+	
+	<update id="update">
+		update emp
+		set ename=#{ename}, job=#{job}, hiredate=#{hiredate}, sal=#{sal}, deptno=#{deptno}
+		where empno=#{empno}
+	</update>
+	
+	<delete id="delete">
+		delete from emp where empno=#{empno}
+	</delete>
+</mapper>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>중고차 목록</title>
+</head>
+<body>
+<h2>중고차 목록</h2>
+
+<a href="/cars/add">차량 등록</a>
+
+<table border="1" cellpadding="8" cellspacing="0" style="margin-top:10px; width:100%;">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>모델</th>
+			<th>연식</th>
+			<th>주행거리</th>
+			<th>연료</th>
+			<th>변속기</th>
+			<th>예상가격</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="car : ${carList}">
+			<td>
+				<a th:href="@{/cars/edit/{id}(id=${car.id})}" th:text="${car.id}">1</a>
+			</td>
+			<td th:text="${car.model}">K5</td>
+			<td th:text="${car.year}">2021</td>
+			<td th:text="${car.mileage}">50000</td>
+			<td th:text="${car.fuel}">가솔린</td>
+			<td th:text="${car.transmission}">오토</td>
+			<td th:text="${car.price} ?: '미입력'">0</td>
+		</tr>
+		<tr th:if="${#lists.isEmpty(carList)}">
+			<td colspan="7">등록된 차량이 없습니다.</td>
+		</tr>
+	</tbody>
+</table>
+</body>
+</html>

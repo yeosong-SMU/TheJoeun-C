@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>SQL Injection 실습</title>
+</head>
+<body>
+<h1>SQL Injection 실습</h1>
+
+<!-- 안전 검색 -->
+<form th:action="@{/search}" method="post">
+	<label>이메일 입력: </label> <input type="text" name="email" th:value="${email}">
+	<button type="submit">안전 검색</button>
+</form>
+
+<!-- 취약 검색 -->
+<form th:action="@{/search_insecure}" method="post" style="margin-top: 10px;">
+	<label>이메일 입력: </label> <input type="text" name="email" th:value="${email}">
+	<button type="submit">취약 검색</button>
+</form>
+
+<hr />
+<a href="/list">회원 목록</a>
+<a href="/">Home</a>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(function() {
+	$("#btn_login").click(function(){
+		let id = $("#id").val();
+		let pw = $("#pw").val();
+		fetch("/login_result.do?id=" + id + "&pw=" + pw)
+		.then(response => response.text())
+		.then(txt => {
+			$("#result").html(txt);
+		});
+	});
+});
+</script>
+</head>
+<body>
+	<div th:replace="~{include/menu :: menu}"></div>
+	
+	id: <input type="text" id="id" /><br>
+	pw: <input type="password" id="pw" /><br>
+	<input type="button" id="btn_login" value="로그인" />
+	<div id="result"></div>
+</body>
+</html>

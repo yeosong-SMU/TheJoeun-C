@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>고객 문의 목록</title>
+</head>
+<body>
+<h1>고객 문의 목록</h1>
+<button type="button" onclick="location.href='/form'">새 문의 입력</button>
+
+<table border="1" th:if="${queries != null and !queries.isEmpty()}">
+<thead>
+	<tr>
+		<th>번호</th>
+		<th>문의내용</th>
+		<th>분류</th>
+		<th>긴급도</th>
+	</tr>
+</thead>
+<tbody>
+	<tr th:each="q : ${queries}">
+		<td th:text="${q.id}"></td>
+		<td><a th:href="@{/edit/{id}(id=${q.id})}" th:text="${q.text}"></a></td>
+		<td th:text="${q.label}"></td>
+		<td th:text="${q.urgencyClass}" th:classappend="${q.urgencyClass=='긴급' ? 'urgent' : 'normal'}">긴급</td>
+	</tr>
+</tbody>
+</table>
+
+<p th:if="${queries == null or queries.isEmpty()}">등록된 문의가 없습니다.</p>
+
+</body>
+</html>

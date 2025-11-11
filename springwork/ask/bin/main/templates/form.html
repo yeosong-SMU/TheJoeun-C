@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>고객 문의 입력</title>
+</head>
+<body>
+<h1>고객 문의 입력</h1>
+
+<form action="/save" method="post">
+	<textarea name="text" rows="5" cols="50" placeholder="문의 내용을 입력하세요."></textarea>
+	<br>
+	<button type="submit">저장</button>
+	<button type="button" onclick="location.href='/'">목록</button>
+</form>
+</body>
+</html>

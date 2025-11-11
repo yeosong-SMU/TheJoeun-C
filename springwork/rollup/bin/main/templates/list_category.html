@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>매출 ROLLUP - 카테고리 기준</title>
+</head>
+<body>
+<h2>매출 ROLLUP - 카테고리 기준</h2>
+<p>
+	<a href="/reports/date">날짜 기준</a> | <a href="/reports/region">지역 기준</a>
+</p>
+
+<form action="/reports/category" method="get">
+	시작일 : <input type="date" name="from" th:value="${from}">
+	종료일 : <input type="date" name="to" th:value="${to}">
+	<button type="submit">조회</button>
+</form>
+
+<table border="1">
+<thead>
+	<tr>
+		<th>구분</th>
+		<th>날짜</th>
+		<th>지역</th>
+		<th>카테고리</th>
+		<th>금액</th>
+	</tr>
+</thead>
+<tbody>
+	<tr th:each="r : ${rows}">
+		<td th:text="${(r.categoryLabel == '전체카테고리' and r.orderDate == null) ? '총계'
+		 : (r.orderDate == null ? '카테고리 소계' : '상세')}"></td>
+		 <td th:text="${r.categoryLabel}"></td>
+		 <td th:text="${r.orderDate != null ? r.orderDate : '-'}"></td>
+		 <td th:text="${r.regionLabel}"></td>
+		 <td th:text="${#numbers.formatDecimal(r.totalAmount, 0, 'COMMA', 0, 'POINT')}"></td>
+	</tr>
+</tbody>
+</table>
+</body>
+</html>

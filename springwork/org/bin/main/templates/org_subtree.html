@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko" 
+	th:replace="_layout :: layout(~{::content})">
+<body>
+<div th:fragment="content">
+<h2>특정 관리자 하위 트리</h2>
+<form method="get" th:action="@{/org/subtree}">
+	<label>관리자 사번: 
+		<input type="number" name="mgr" th:value="${mgr}" />
+	</label>
+	<button type="submit">조회</button>
+</form>
+<table border="1">
+<thead>
+<tr>
+	<th>org_ename</th>
+	<th>empno</th>
+	<th>job</th>
+	<th>mgr</th>
+	<th>lvl</th>
+	<th>path_from_mgr</th>
+</tr>
+</thead>
+<tbody>
+	<tr th:each="r : ${rows}">
+		<td class="mono" th:text="${r['org_ename']}"></td>
+		<td th:text="${r['empno']}"></td>
+		<td th:text="${r['job']}"></td>
+		<td th:text="${r['mgr']}"></td>
+		<td th:text="${r['lvl']}"></td>
+		<td th:text="${r['path_from_mgr']}"></td>
+	</tr>
+</tbody>
+</table>
+</div>
+</body>
+</html>

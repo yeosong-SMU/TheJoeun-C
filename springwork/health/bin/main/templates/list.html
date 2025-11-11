@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>건강 정보 목록</title>
+</head>
+<body>
+<h1>건강 정보 목록</h1>
+<button type="button" onclick="location.href='/health/upload'">csv 업로드</button>
+<table border="1">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>나이</th>
+			<th>성별</th>
+			<th>키</th>
+			<th>몸무게</th>
+			<th>BMI</th>
+			<th>수축기</th>
+			<th>이완기</th>
+			<th>콜레스테롤</th>
+			<th>흡연</th>
+			<th>운동</th>
+			<th>점수</th>
+			<th>메시지</th>
+			<th>수정</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="health : ${list}">
+			<td th:text="${health.id}">1</td>
+			<td th:text="${health.age}">30</td>
+			<td th:text="${health.gender == 0 ? '남성' : '여성'}">남성</td>
+			<td th:text="${health.height}">170</td>
+			<td th:text="${health.weight}">70</td>
+			<td th:text="${health.bmi}">24.2</td>
+			<td th:text="${health.systolicBp}">120</td>
+			<td th:text="${health.diastolicBp}">80</td>
+			<td th:text="${health.cholesterol}">200</td>
+			<td th:text="${health.smoker == 1 ? '흡연' : '비흡연'}">비흡연</td>
+			<td th:text="${health.exerciseFreq}">3</td>
+			<td th:text="${health.score}">82.5</td>
+			<td th:text="${health.message}">양호</td>
+			<td><a th:href="@{/health/edit/{id}(id=${health.id})}">수정</a></td>
+		</tr>
+	</tbody>
+</table>
+</body>
+</html>

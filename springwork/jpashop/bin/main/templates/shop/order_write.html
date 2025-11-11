@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/mylayout}">
+<th:block layout:fragment="content">
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script>
+$(function() {
+	$('input[type=radio][name="method"]').change(function(){
+		const a = $(this).val();
+		if(a=="card"){
+			$("#divCard").css("display", "block");
+		} else if(a == "account") {
+			$("#divCard").css("display", "none");
+		}
+	});
+});
+function showPostcode() {
+	new daum.Postcode({
+		oncomplete : function(data) {
+			let fullAddr = "";
+			let extraAddr = "";
+			if(data.userSelectedType === "R") {
+				fullAddr = data.roadAddress;
+			} else {
+				fullAddr = data.jibunAddress;
+			}
+			if(data.userSelectedType === "R") {
+				if(data.bname !== "") {
+					extraAddr += data.bname;
+				}
+				if(data.buildingName !== "") {
+					extraAddr += (extraAddr !== "" ? ", "
+							+ data.buildingName : data.buildingName);
+				}
+				fullAddr += (extraAddr !== "" ? " (" + extraAddr + ")" : "");
+			}
+			document.getElementById("zipcode").value = data.zonecode;
+			document.getElementById("address1").value = fullAddr;
+			document.getElementById("address2").focus();
+		}
+	}).open();
+}
+</script>
+
+<div class="container">
+<h2 class="text-center">주문서 작성</h2>
+<form name="form1" method="post" action="/order/insert">
+<div class="mb-3">
+	* 주문금액: [[${money}]]<br>
+	* 배송료: [[${delivery}]]<br>
+	* 주문금액합계: [[${totalMoney}]]
+	<input type="hidden" name="productCode" th:value="${productCode}">
+	<input type="hidden" name="amount" th:value="${amount}">
+	<input type="hidden" name="money" th:value="${money}">
+	<input type="hidden" name="delivery" th:value="${delivery}">
+	<input type="hidden" name="totalMoney" th:value="${totalMoney}">
+</div>
+<div class="mb-3">
+	결제방법<br>
+	<input type="radio" name="method" value="card" checked> 카드결제
+	<input type="radio" name="method" value="account"> 계좌이체
+</div>
+<div class="mb-3" id="divCard">
+	<label for="cardNumber" class="form-label">카드번호</label>
+	<input class="form-control" id="cardNumber" name="cardNumber">
+</div>
+<div class="mb-3">
+	<label for="zipcode" class="form-label">우편번호</label>
+	<input class="form-control" id="zipcode" name="zipcode" th:value="${zipcode}" readonly>
+	<button type="button" onclick="showPostcode()" class="btn btn-info">우편번호 찾기</button>
+</div>
+<div class="mb-3">
+	<label for="address1" class="form-label">주소</label>
+	<input class="form-control" id="address1" name="address1" th:value="${address1}">
+</div>
+<div class="mb-3">
+	<label for="address2" class="form-label">상세주소</label>
+	<input class="form-control" id="address2" name="address2" th:value="${address2}">
+</div>
+<div class="mb-3">
+	<label for="tel" class="form-label">전화</label>
+	<input class="form-control" id="tel" name="tel" th:value="${tel}">
+</div>
+<button class="btn btn-primary">확인</button>
+</form>
+</div>
+</th:block>
+</html>

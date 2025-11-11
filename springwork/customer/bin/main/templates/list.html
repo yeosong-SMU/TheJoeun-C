@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>고객 목록</title>
+</head>
+<body>
+<h1>고객 목록</h1>
+<button type="button" onclick="location.href='/write'">고객 등록</button>
+<form action="/" method="get">
+	<table border="1">
+		<thead>
+			<tr>
+				<th>이름</th>
+				<th>전화번호</th>
+				<th>이메일</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:if="${#lists.isEmpty(list)}">
+				<td colspan="3">등록된 고객이 없습니다.</td>
+			</tr>
+			<tr th:each="c : ${list}">
+				<td><a th:href="@{/edit/{id}(id=${c.id})}" th:text="${c.name}">이름</a></td>
+				<td th:text="${c.phone}">전화번호</td>
+				<td th:text="${c.email}">이메일</td>
+			</tr>
+		</tbody>
+	</table>
+</form>
+</body>
+</html>

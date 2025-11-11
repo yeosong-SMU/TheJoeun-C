@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>성적 수정</title>
+<script>
+function updatePrediction() {
+	const score = {
+			age: parseInt(document.getElementById("age").value),
+			studytime: parseInt(document.getElementById("studytime").value),
+			failures: parseInt(document.getElementById("age").value),
+			absences: parseInt(document.getElementById("absences").value),
+			G1: parseInt(document.getElementById("g1").value),
+			G2: parseInt(document.getElementById("g2").value),
+			Medu: parseInt(document.getElementById("medu").value),
+			Fedu: parseInt(document.getElementById("fedu").value),
+	};
+	
+	fetch("http://localhost:8000/predict", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify(score)
+	})
+	.then(response => response.json())
+	.then(data => {
+		if(data.prediction !== undefined) {
+			document.getElementById("g3").value = data.prediction;
+		} else {
+			alert("예측 실패: " + data.error);
+		}
+	})
+	.catch(error => {
+		consonle.error("Flask API 호출 오류: ", error);
+	});
+}
+</script>
+</head>
+<body>
+<h2>성적 수정</h2>
+
+<form th:action="@{/scores/edit}" th:object="${score}" method="post">
+	<input type="hidden" th:field="*{id}" />
+	<label>나이: <input type="number" th:field="*{age}" id="age" onchange="updatePrediction()" /></label><br>
+	<label>공부시간: <input type="number" th:field="*{studytime}" id="studytime" onchange="updatePrediction()" /></label><br>
+	<label>실패횟수: <input type="number" th:field="*{failures}" id="failures" onchange="updatePrediction()" /></label><br>
+	<label>결석: <input type="number" th:field="*{absences}" id="absences" onchange="updatePrediction()" /></label><br>
+	<label>1학기 성적(G1): <input type="number" th:field="*{g1}" id="g1" onchange="updatePrediction()" /></label><br>
+	<label>2학기 성적(G2): <input type="number" th:field="*{g2}" id="g2" onchange="updatePrediction()" /></label><br>
+	<label>어머니 학력(Medu): <input type="number" th:field="*{medu}" id="medu" onchange="updatePrediction()" /></label><br>
+	<label>아버지 학력(Fedu): <input type="number" th:field="*{fedu}" id="fedu" onchange="updatePrediction()" /></label><br>
+	<label>최종 성적(G3): <input type="number" th:field="*{g3}" id="g3" readonly /></label><br>
+	<br>
+	<button type="submit">저장</button>
+	<button type="button" onclick="location.href='/scores'">목록</button>
+</form>
+</body>
+</html>

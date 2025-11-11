@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>SALES</title>
+</head>
+<body>
+<h2 th:text="'SALES 목록 (' + (${year} == 'all' ? '전체' : ${year}) + ')'">
+SALES 목록</h2>
+
+<form th:action = "@{/sales}" method="get">
+연도: <select name="year">
+	<option value="all" th:selected="${year == null or year == 'all'}">전체</option>
+	<option th:each="y : ${years}" th:value="${y}" th:text="${y}" th:selected="${yearInt != null and y == yearInt}"></option>
+</select>
+<button type="submig">조회</button>
+</form>
+
+<form th:action = "@{/sales/summary}" method="post">
+	<input type="hidden" name="year" th:value="${year}">
+	<button type="submit" th:disabled="${year == 'all'}">
+		해당 연도 월별 요약 집계 실행
+	</button>
+</form>
+
+<table border="1">
+<thead>
+	<tr>
+		<th>ID</th>
+		<th>일시</th>
+		<th>금액</th>
+	</tr>
+</thead>
+<tbody>
+	<tr th:each="s : ${sales}">
+		<td th:text="${s.saleId}">1</td>
+		<td th:text="${#temporals.format(s.saleDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+		<td th:text="${#numbers.formatDecimal(s.amount, 0, 'COMMA', 0, 'POINT')}"></td>
+	</tr>
+	<tr th:if="${#lists.isEmpty(ssales)}">
+		<td colspan="3">데이터가 없습니다.</td>
+	</tr>
+</tbody>
+</table>
+</body>
+</html>

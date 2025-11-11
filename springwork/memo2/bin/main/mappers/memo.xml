@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.memo.MemoDAO">
+	<select id="list" resultType="map">
+		select * from memo2
+		order by id desc
+	</select>
+	<insert id="insert">
+		insert into memo2 (title, content) values (#{title}, #{content})
+	</insert>
+	<select id="detail" resultType="map">
+		select * from memo2 where id = #{id}
+	</select>
+	<update id="update">
+		update memo2
+		set title = #{title}, content = #{content}
+		where id = #{id}
+	</update>
+	<delete id="delete">
+		delete from memo2 where id=#{id}
+	</delete>
+	<select id="search" resultType="map">
+		select * from memo2
+		where title like #{keyword}
+		order by id desc
+	</select>
+</mapper>

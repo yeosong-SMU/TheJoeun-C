@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.survey.SurveyDAO">
+	<select id="view" resultType="map">
+		select * from survey where survey_idx=#{survey_idx}
+	</select>
+	
+	<insert id="insert">
+		insert into answer values ((select ifnull(max(answer_idx)+1, 1) from answer a), #{survey_idx}, #{num})
+	</insert>
+	
+	<select id="summary" resultType="map">
+		select * from survey_v where survey_idx=#{survey_idx}
+	</select>
+</mapper>

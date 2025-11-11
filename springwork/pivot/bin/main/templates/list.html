@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>학과별 학년 분포</title>
+</head>
+<body>
+<h2>학과별 학년 분포</h2>
+
+<table border="1">
+<thead>
+	<tr>
+		<th>학과</th>
+		<th>1학년</th>
+		<th>2학년</th>
+		<th>3학년</th>
+		<th>4학년</th>
+	</tr>
+</thead>
+<tbody>
+	<tr th:each="r : ${rows}">
+		<td th:text="${r.dept}">컴퓨터공학</td>
+		<td th:text="${r.g1}">0</td>
+		<td th:text="${r.g2}">0</td>
+		<td th:text="${r.g3}">0</td>
+		<td th:text="${r.g4}">0</td>
+	</tr>
+</tbody>
+</table>
+</body>
+</html>

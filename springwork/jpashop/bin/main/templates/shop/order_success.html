@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/mylayout}">
+<th:block layout:fragment="content">
+<div class="container">
+<h2 class="text-center">주문처리가 완료되었습니다.</h2>
+<div class="mb-3">
+	주문금액 : [[${dto.money}]] , 배송료: [[${dto.delivery}]] ,    총합계: [[${dto.totalMoney}]]<br>
+	결제방법 : [[${dto.method}]]<br>
+	카드번호 : [[${dto.cardNumber}]]<br>
+	배송주소 : [[${dto.address1}]] [[${dto.address2}]] ( 우편번호 [[${dto.zipcode}]] )<br>
+	전화번호 : [[${dto.tel}]]
+</div>
+<button type="button" class="btn btn-primary" onclick="location.href='/order/list'">주문 목록</button>
+<button type="button" class="btn btn-info" onclick="location.href='/product/list'">상품 목록</button>
+</div>
+</th:block>
+</html>
