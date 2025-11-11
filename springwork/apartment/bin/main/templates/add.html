@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>아파트 등록</title>
+</head>
+<body>
+<h2>아파트 등록</h2>
+
+<form th:action="@{/add}" th:object="${apartment}" method="post">
+	<table>
+		<tr>
+			<td>주소</td>
+			<td><input type="text" th:field="*{address}" required></td>
+		</tr>
+		<tr>
+			<td>전용면적</td>
+			<td><input type="number" step="0.01" th:field="*{area}" required></td>
+		</tr>
+		<tr>
+			<td>층수</td>
+			<td><input type="number" th:field="*{floor}" required></td>
+		</tr>
+		<tr>
+			<td>방 개수</td>
+			<td><input type="number" th:field="*{rooms}" required></td>
+		</tr>
+		<tr>
+			<td>건축 연도</td>
+			<td><input type="number" th:field="*{builtYear}" required></td>
+		</tr>
+		<tr>
+			<td>실제 시세 (만원)</td>
+			<td><input type="number" th:field="*{price}"></td>
+		</tr>
+	</table>
+	
+	<button type="submit">등록</button>
+	<a th:href="@{/}"><button type="button">목록으로</button></a>
+</form>
+</body>
+</html>

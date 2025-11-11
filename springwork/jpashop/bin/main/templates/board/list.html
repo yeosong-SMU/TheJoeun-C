@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/mylayout}">
+<th:block layout:fragment="content">
+<div class="container">
+<script>
+$(function() {
+	$("#btnWrite").click(function() {
+		location.href="/board/write";
+	});
+});
+</script>
+<h2>게시판</h2>
+<form name="form1" method="post" action="/board/list">
+	<select name="search_option">
+		<option value="all" th:selected="${search_option == 'all'}">이름+내용+제목</option>
+		<option value="name" th:selected="${search_option == 'name'}">이름</option>
+		<option value="contents" th:selected="${search_option == 'contents'}">내용</option>
+		<option value="title" th:selected="${search_option == 'title'}">제목</option>
+	</select>
+	<input name="keyword" th:value="${keyword}">
+	<input type="submit" value="조회" class="btn btn-info">
+	
+	<button th:if="${session.userid != null}" type="button" id="btnWrite" class="btn btn-primary">글쓰기</button>
+</form>
+[[${count}]]개의 게시물이 있습니다.
+<table class="table table-hover table-bordered">
+	<tr>
+		<th>번호</th>
+		<th>제목</th>
+		<th>이름</th>
+		<th>날짜</th>
+		<th>조회수</th>
+	</tr>
+	<tr th:each="row:${boardList}">
+		<td>[[${row.idx}]]</td>
+		<td>
+			<a th:href="@{/board/detail?idx=}+${row.idx}">[[${row.title}]]</a>
+			<span th:if="${#lists.size(row.replyList)}" style="color:red;">
+				( [[${#lists.size(row.replyList)}]] )
+			</span>
+		</td>
+		<td>[[${row.member.name}]]</td>
+		<td>[[${#dates.format(row.regdate, 'yyyy-MM-dd')}]]</td>
+		<td>[[${row.hit}]]</td>
+	</tr>
+</table>
+
+<div class="text-center">
+	<ul class="pagination" th:with="start=${start}, last=(${last})">
+		<li>
+			<a th:href="@{/board/list(page=1)}"><span>[처음]</span></a>&nbsp;
+		</li>
+		<li th:class="${boardList.first} ? 'disabled'">
+			<a th:href="${boardList.first} ? '#' :@{/board/list(page=${boardList.number})}">
+				<span>[이전]</span>
+			</a>&nbsp;
+		</li>
+		<li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boardList.number + 1} ? 'page-item'">
+			<span th:if="${curPage != page}"><a th:href="@{/board/list(page=${page})}">[[${page}]]</a>&nbsp;</span>
+			<span th:if="${curPage == page}" style="color:red;">[[${page}]]&nbsp;</span>
+		</li>
+		<li th:class="${boardList.last} ? 'disabled'">
+			<a th:href="${boardList.last} ? '#' :@{/board/list(page=${boardList.number + 2})}">
+				<span>[다음]</span>
+			</a>&nbsp;
+		</li>
+		<li>
+			<a th:href="@{/board/list(page=${boardList.totalPages})}"><span>[끝]</span></a>&nbsp;
+		</li>
+	</ul>
+</div>
+</div>
+</th:block>
+</html>

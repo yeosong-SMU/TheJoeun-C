@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>보험 추가</title>
+<script>
+function calculateInsurance() {
+	const formData = {
+			age: document.getElementById('age').value,
+			gender: document.getElementById('gender').value, 
+			driving_experience: document.getElementById('drivingExperience').value, 
+			accident_history: document.getElementById('accidentHistory').value, 
+			vehicle_type: document.getElementById('vehicleType').value, 
+			annual_mileage: document.getElementById('annualMileage').value, 
+			vehicle_age: document.getElementById('vehicleAge').value, 
+			location: document.getElementById('location').value, 
+			credit_score: document.getElementById('creditScore').value, 
+			vehicle_value: document.getElementById('vehicleValue').value
+	};
+	
+	fetch('http://localhost:5000/predict', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		}, 
+		body: JSON.stringify(formData)
+	})
+	.then(response => response.json())
+	.then(data => {
+		document.getElementById('insurance').value = parseInt(data.predicted_insurance);
+	});
+}
+</script>
+</head>
+<body>
+<h1>보험 추가</h1>
+
+<form id="insuranceForm" action="/insurance/save" method="post">
+	<label for="age">나이: </label><input type="number" id="age" name="age" required onkeyup="calculateInsurance()" />
+	<br>
+	
+	<label for="gender">성별: </label>
+	<select id="gender" name="gender" required onchange="calculateInsurance()">
+		<option value="0">여성</option>
+		<option value="1">남성</option>
+	</select>
+	<br>
+	
+	<label for="drivingExperience">운전 경력 (년): </label>
+	<input type="number" id="drivingExperience" name="drivingExperience" required onkeyup="calculateInsurance()" />
+	<br>
+	
+	<label for="accidentHistory">사고 이력: </label>
+	<select id="accidentHistory" name="accidentHistory" required onchange="calculateInsurance()">
+		<option value="0">없음</option>
+		<option value="1">있음</option>
+	</select>
+	<br>
+	
+	<label for="vehicleType">차량 종류: </label>
+	<select id="vehicleType" name="vehicleType" required onchange="calculateInsurance()">
+		<option value="0">Sedan</option>
+		<option value="1">SUV</option>
+		<option value="2">Truck</option>
+		<option value="3">Coupe</option>
+		<option value="4">Van</option>
+	</select>
+	<br>
+	
+	<label for="annualMileage">연간 주행 거리 (킬로미터): </label>
+	<input type="number" id="annualMileage" name="annualMileage" required onkeyup="calculateInsurance()" />
+	<br>
+	
+	<label for="vehicleAge">차량 연식 (년): </label>
+	<input type="number" id="vehicleAge" name="vehicleAge" required onkeyup="calculateInsurance()" />
+	<br>
+	
+	<label for="location">거주 지역: </label>
+	<select id="location" name="location" required onchange="calculateInsurance()">
+		<option value="0">도시</option>
+		<option value="1">교외</option>
+		<option value="2">농촌</option>
+	</select>
+	<br>
+	
+	<label for="creditScore">신용 점수: </label>
+	<input type="number" id="creditScore" name="creditScore" required onkeyup="calculateInsurance()" />
+	<br>
+	
+	<label for="vehicleValue">차량 가치 (KRW): </label>
+	<input type="number" id="vehicleValue" name="vehicleValue" required onkeyup="calculateInsurance()" />
+	<br>
+	
+	<label for="insurance">보험료 (KRW): </label>
+	<input type="number" id="insurance" name="insurance" readonly />
+	<br>
+	
+	<button type="submit">저장</button>
+	<button type="button" onclick="window.location.href='/insurance/list'">목록으로 돌아가기</button>
+</form>
+</body>
+</html>

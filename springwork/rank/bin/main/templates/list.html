@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>급여 석차</title>
+<script>
+function autoSubmit() {
+	document.getElementById('filterForm').submit();
+}
+</script>
+</head>
+<body>
+<h2>급여 순위</h2>
+
+<form id="filterForm" th:action="@{/}" method="get">
+	순위 기준:
+	<select name="rankMode" th:value="${rankMode}" onchange="autoSubmit()">
+		<option value="bydept" th:selected="${rankMode == 'bydept'}">
+			부서별 순위
+		</option>
+		<option value="overall" th:selected="${rankMode == 'overall'}">
+			전체 순위
+		</option>
+	</select>
+	부서: 
+	<select name="dept" onchange="autoSubmit()">
+		<option th:value="${null}" th:selected="${dept == null}">
+			전체 부서
+		</option>
+		<option th:each="d : ${depts}" th:value="${d}" 
+		th:text="${d}" th:selected="${dept != null and d == dept}">
+		</option>
+	</select>
+</form>
+
+<table border="1">
+<thead>
+	<tr>
+		<th>사번</th>
+		<th>이름</th>
+		<th>부서</th>
+		<th>급여</th>
+		<th>RANK</th>
+		<th>DENSE_RANK</th>
+	</tr>
+</thead>
+<tbody>
+	<tr th:each="r : ${rows}">
+		<td th:text="${r.empId}"></td>
+		<td th:text="${r.ename}"></td>
+		<td th:text="${r.deptNo}"></td>
+		<td th:text="${#numbers.formatInteger(r.salary, 0, 'COMMA')}"></td>
+		<td th:text="${r.rnk}"></td>
+		<td th:text="${r.drnk}"></td>
+	</tr>
+	<tr th:if="${#lists.isEmpty(rows)}">
+		<td colspan="6">데이터가 없습니다.</td>
+	</tr>
+</tbody>
+</table>
+</body>
+</html>

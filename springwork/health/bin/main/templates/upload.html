@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>CSV 업로드</title>
+</head>
+<body>
+<h1>CSV 파일 업로드</h1>
+
+<form th:action="@{/health/upload}" method="post" enctype="multipart/form-data">
+	<input type="file" name="file" accept=".csv" required>
+	<button type="submit">업로드</button>
+	<button type="button" onclick="location.href='/'">목록</button>
+</form>
+</body>
+</html>

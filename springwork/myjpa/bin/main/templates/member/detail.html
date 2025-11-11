@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insert title here</title>
+<link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script th:src="@{/js/bootstrap.js}"></script>
+<script>
+$(function() {
+	$("#btnUpdate").click(function() {
+		document.form1.action="update";
+		document.form1.submit();
+	});
+	$("#btnDelete").click(function() {
+		if(confirm("삭제하시겠습니까?")){
+			document.form1.action = "delete";
+			document.form1.submit();
+		}
+	});
+});
+</script>
+</head>
+<body>
+<div class="container">
+	<h2 class="text-center">회원정보</h2>
+	<form method="post" name="form1">
+		<div>
+			<label for="userid" class="form-label">아이디</label>
+			<input class="form-control" id="userid" name="userid" th:value="${dto.userid}" readonly>
+		</div>
+		<div>
+			<label for="passwd" class="form-label">비밀번호</label>
+			<input class="form-control" type="password" id="passwd" name="passwd">
+			<p class="text-center text-danger">[[${message}]]</p>
+		</div>
+		<div>
+			<label for="name" class="form-label">이름</label>
+			<input class="form-control" id="name" name="name" th:value="${dto.name}">
+		</div>
+		<div>
+			<label for="email" class="form-label">이메일</label>
+			<input type="email" class="form-control" id="email" name="email" th:value="${dto.email}">
+		</div>
+		<div>
+			<label for="join_date" class="form-label">회원가입일자</label>
+			<input class="form-control" id="join_date" th:value="${#dates.format(dto.join_date, 'yyyy-MM-dd HH:mm:ss')}" readonly>
+		</div>
+		<div class="text-center">
+			<button type="button" class="btn btn-success" id="btnUpdate">수정</button>
+			<button type="button" class="btn btn-danger" id="btnDelete">삭제</button>
+			<button type="button" class="btn btn-info" onclick="location.href='/'">목록</button>
+		</div>
+	</form>
+</div>
+</body>
+</html>

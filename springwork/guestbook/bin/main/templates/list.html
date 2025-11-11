@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h2>방명록</h2>
+<a href="write.do">글쓰기</a>
+<table border="1">
+	<tr>
+		<th>번호</th>
+		<th>이름</th>
+		<th>내용</th>
+		<th>날짜</th>
+	</tr>
+	<tr th:each="row, stats : ${list}">
+		<td><span>[[${stats.count}]]</span></td>
+		<td><span>[[${row.name}]]</span></td>
+		<td>
+			<a th:href="@{view.do(idx=${row.idx})}">
+				<span>[[${row.content}]]</span>
+			</a>
+		</td>
+		<td><span th:text="${#dates.format(row.post_date, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
+	</tr>
+</table>
+</body>
+</html>

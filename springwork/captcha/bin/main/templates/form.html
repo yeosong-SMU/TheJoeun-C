@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>글쓰기</title>
+</head>
+<body>
+<h2>글쓰기</h2>
+<a href="/">목록</a>
+<form action="/post" method="post" th:object="${post}">
+	<p>
+		작성자: <input type="text" th:field="*{author}" placeholder="작성자 이름" size="80" required>
+	</p>
+	
+	<p>
+		내용: <textarea th:field="*{content}" rows="5" cols="100" placeholder="내용을 입력하세요" required></textarea>
+	</p>
+	
+	<p>
+		보안문자: <br>
+		<img th:src="@{/captcha(t=${#dates.createNow().time})}" alt="captcha">
+	</p>
+	
+	<p>
+		<input type="text" name="captchaInput" placeholder="보안 문자 입력" size="20" required>
+	</p>
+	
+	<p>
+		<button type="submit">저장</button>
+	</p>
+	
+	<p th:if="${error}" th:text="${error}" class="error"></p>
+</form>
+</body>
+</html>

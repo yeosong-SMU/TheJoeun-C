@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>상품 목록</title>
+</head>
+<body>
+<h2>상품 목록</h2>
+<a th:href="@{/upload}">엑셀 업로드</a>
+<a th:href="@{/export}">엑셀 다운로드</a>
+
+<table border="1">
+<thead>
+	<tr>
+		<th>ID</th>
+		<th>Name</th>
+		<th>Category</th>
+		<th>Price</th>
+		<th>Stock</th>
+		<th>Created</th>
+	</tr>
+</thead>
+<tbody>
+	<tr th:each="p : ${items}">
+		<td th:text="${p.id}"></td>
+		<td th:text="${p.name}"></td>
+		<td th:text="${p.category}"></td>
+		<td th:text="${p.price}"></td>
+		<td th:text="${p.stockQty}"></td>
+		<td th:text="${p.createdAt}"></td>
+	</tr>
+</tbody>
+</table>
+</body>
+</html>

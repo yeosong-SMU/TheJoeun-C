@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>아파트 목록</title>
+</head>
+<body>
+	<h2>아파트 목록</h2>
+	<form method="get" th:action="@{/}">
+		<input type="text" name="keyword" th:value="${keyword}" placeholder="주소 검색">
+		<button type="submit">검색</button>
+		<a th:href="@{/add}"><button type="button">아파트 등록</button></a>
+		<button type="button" onclick="location.href='/predict-all'">예측 시세 계산</button>
+	</form>
+	<br>
+	<table border="1">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>주소</th>
+				<th>면적</th>
+				<th>층수</th>
+				<th>방수</th>
+				<th>연도</th>
+				<th>시세</th>
+				<th>예측</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="apt : ${list}">
+				<td th:text="${apt.id}">1</td>
+				<td><a th:href="@{/predict/{id}(id=${apt.id})}" th:text="${apt.address}">수정/삭제</a></td>
+				<td th:text="${apt.area}">84.0</td>
+				<td th:text="${apt.floor}">12</td>
+				<td th:text="${apt.rooms}">3</td>
+				<td th:text="${apt.builtYear}">2005</td>
+				<td align="right" th:text="${#numbers.formatDecimal(apt.price, 0, 'COMMA', 0, 'POINT')}"></td>
+				<td align="right" th:text="${#numbers.formatDecimal(apt.predictedPrice, 0, 'COMMA', 0, 'POINT')}"></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>

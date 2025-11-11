@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/mylayout}">
+<th:block layout:fragment="content">
+<div class="container-fluid">
+<h2 class="text-center">상품목록</h2>
+<form method="post">
+	<div class="mb-3">
+		<label for="productName" class="form-label">상품명</label>
+		<input class="form-control" id="productName" name="productName" th:value="${productName}">
+	</div>
+	<input type="submit" value="조회" class="btn btn-info">
+	
+	<button type="button" th:if="${session.level == 10}" class="btn btn-primary" onclick="location.href='/product/write'">상품등록</button>
+</form>
+
+<hr>
+등록된 상품수 : [[${#lists.size(list)}]]
+<table class="table table-hover">
+	<tr th:each="row:${list}">
+		<td width="20%">
+			<img th:if="${row.filename != '-'}" th:src="@{/images/}+${row.filename}" width="100px" height="100px">
+			<span th:if="${row.filename == '-'}">[상품 이미지 미등록]<br></span>
+		</td>
+		<td>
+			<a th:href="@{/product/detail/}+${row.productCode}">
+				상품명: [[${row.productName}]]<br>
+				가격: [[${row.price}]]원
+			</a>
+			<form method="post">
+				<label for="amount" class="form-label">수량</label>
+				<input type="hidden" name="productCode" th:value="${row.productCode}">
+				<input type="number" value="1" class="col-xs-2" style="width:100px;" id="amount" name="amount">
+				<button type="button" class="btn btn-info" onclick="this.form.action='/cart/insert';this.form.submit();">장바구니</button>
+				<button type="button" class="btn btn-primary" onclick="this.form.action='/order/write';this.form.submit();">주문</button>
+			</form>
+			<a th:if="${session.level == 10}" th:href="@{/product/edit/}+${row.productCode}" class="btn btn-primary">편집</a>
+		</td>
+	</tr>
+</table>
+</div>
+</th:block>
+</html>

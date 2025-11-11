@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko" 
+	th:replace="_layout :: layout(~{::content})">
+<body>
+<div th:fragment="content">
+<h2>홈</h2>
+<p th:text="${message}"></p>
+	<ul>
+		<li><a th:href="@{/org/full}">전체 조직도</a></li>
+		<li><a th:href="@{/org/subtree}">특정 관리자 하위 트리</a></li>
+		<li><a th:href="@{/org/chain}">사원 상향 보고 라인</a></li>
+		<li><a th:href="@{/org/sum}">서브트리 급여 합계</a></li>
+		<li><a th:href="@{/org/leaves}">리프 직원</a></li>
+	</ul>
+</div>
+</body>
+</html>

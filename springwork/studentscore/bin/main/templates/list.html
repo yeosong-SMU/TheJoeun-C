@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>학생 성적 목록</title>
+</head>
+<body>
+<h1>학생 성적 목록</h1>
+
+<p>
+	<a th:href="@{/scores/upload}">CSV 업로드</a>
+</p>
+
+<table border="1">
+<thead>
+	<tr>
+		<th>ID</th>
+		<th>나이</th>
+		<th>공부시간</th>
+		<th>결석</th>
+		<th>G1</th>
+		<th>G2</th>
+		<th>G3</th>
+		<th>수정</th>
+		<th>삭제</th>
+	</tr>
+</thead>
+<tbody>
+	<tr th:each="s : ${list}">
+		<td th:text="${s.id}"></td>
+		<td th:text="${s.age}"></td>
+		<td th:text="${s.studytime}"></td>
+		<td th:text="${s.absences}"></td>
+		<td th:text="${s.g1}"></td>
+		<td th:text="${s.g2}"></td>
+		<td th:text="${s.g3}"></td>
+		<td><a th:href="@{'/scores/edit/' + ${s.id}}">수정</a></td>
+		<td>
+			<form th:action="@{'/scores/delete/' + ${s.id}}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+				<button type="submit">삭제</button>
+			</form>
+		</td>
+	</tr>
+</tbody>
+</table>
+</body>
+</html>

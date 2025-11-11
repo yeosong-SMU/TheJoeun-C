@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>사원 목록</title>
+</head>
+<body>
+<h2>사원 목록</h2>
+
+<form method="get" th:action="@{/employee/list}">
+	<select name="departmentId">
+		<option value="" th:selected="${departmentId == null}">-- 전체 부서 --</option>
+		<option th:each="dept : ${departments}" th:value="${dept.deptId}" th:text="${dept.deptName}" th:selected="${departmentId == dept.deptId}"></option>
+	</select>
+	<input type="text" name="keyword" placeholder="이름 검색" th:value="${keyword}">
+	<button type="submit">검색</button>
+	<button type="button" onclick="location.href='/employee/form'">사원 등록</button>
+</form>
+
+<br>
+
+<table border="1">
+<thead>
+	<tr>
+		<th>사번</th>
+		<th>이름</th>
+		<th>부서</th>
+		<th>직급</th>
+		<th>급여</th>
+		<th>입사일</th>
+	</tr>
+</thead>
+<tbody>
+	<tr th:each="e : ${list}">
+		<td th:text="${e.empId}">1</td>
+		<td><a th:href="@{/employee/edit(id=${e.empId})}" th:text="${e.empName}"></a></td>
+		<td th:text="${e.department != null ? e.department.deptName : '-'}"></td>
+		<td th:text="${e.position}"></td>
+		<td th:text="${#numbers.formatInteger(e.salary, 0, 'COMMA')}"></td>
+		<td th:text="${e.hireDate}"></td>
+	</tr>
+</tbody>
+</table>
+</body>
+</html>

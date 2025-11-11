@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>입시 상담 결과 목록</title>
+</head>
+<body>
+<h2>입시 상담 결과 목록</h2>
+<a href="/upload">CSV 업로드</a>
+<table border="1">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>국어</th>
+			<th>영어</th>
+			<th>수학</th>
+			<th>희망 전공</th>
+			<th>결과</th>
+			<th>확률</th>
+			<th>수정</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="a : ${list}">
+			<td th:text="${a.id}"></td>
+			<td th:text="${a.kor}"></td>
+			<td th:text="${a.eng}"></td>
+			<td th:text="${a.math}"></td>
+			<td th:text="${a.wishMajor}"></td>
+			<td th:text="${a.result}"></td>
+			<td th:text="${a.probability}"></td>
+			<td><a th:href="@{'/edit/' + ${a.id}}">수정</a></td>
+		</tr>
+	</tbody>
+</table>
+</body>
+</html>

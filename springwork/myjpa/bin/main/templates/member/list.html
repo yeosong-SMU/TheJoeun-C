@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insert title here</title>
+<link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script th:src="@{/js/bootstrap.js}"></script> 
+</head>
+<body>
+	<div class="container">
+		<h2 class="text-center">회원목록</h2>
+		<button type="button" class="btn btn-primary" onclick="location.href='write'">회원등록</button>
+		<table class="table table-hover table-bordered">
+			<tr>
+				<td>아이디</td>
+				<td>이름</td>
+				<td>이메일</td>
+				<td>가입일자</td>
+			</tr>
+			<tr th:each="row:${list}">
+				<td>[[${row.userid}]]</td>
+				<td><a th:href="@{view(userid=${row.userid})}">[[${row.name}]]</a></td>
+				<td>[[${row.email}]]</td>
+				<td>[[${#dates.format(row.join_date, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

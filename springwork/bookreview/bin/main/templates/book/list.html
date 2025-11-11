@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>도서 목록</title>
+<link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:replace="include/nav :: menu"></div>
+<h2>도서 목록</h2>
+<button type="button" onclick="location.href='/books/add'">도서 등록</button>
+<table border="1">
+	<tr>
+		<th>제목</th>
+		<th>저자</th>
+		<th>출판사</th>
+		<th>출판일</th>
+	</tr>
+	<tr th:each="book : ${books}">
+		<td><a th:href="@{|/books/edit/${book.id}|}" th:text="${book.title}"></a></td>
+		<td th:text="${book.author}"></td>
+		<td th:text="${book.publisher}"></td>
+		<td th:text="${#dates.format(book.publishedDate, 'yyyy-MM-dd')}"></td>
+	</tr>
+</table>
+</body>
+</html>

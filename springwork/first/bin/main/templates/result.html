@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:replace="~{include/menu :: menu}"></div>
+	
+	<h2>name: <span th:text="${name}">[이름]</span></h2>
+	<h2>age: <span th:text="${age}">[나이]</span></h2>
+</body>
+</html>

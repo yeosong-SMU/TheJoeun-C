@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>CSV 업로드</title>
+<link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<h2>CSV 업로드</h2>
+
+<form th:action="@{/scores/upload}" method="post" enctype="multipart/form-data">
+	<input type="file" name="file" accept=".csv" required>
+	<button type="submit">업로드</button>
+</form>
+
+<p th:text="${message}">상태 메시지</p>
+
+<button type="button" onclick="location.href='/scores'">목록</button>
+</body>
+</html>

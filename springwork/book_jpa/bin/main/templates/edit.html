@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Edit Book</title>
+<script type="text/javascript">
+function confirmDelete() {
+	if(confirm("정말 삭제하시겠습니까?")){
+		const id = document.getElementById("id").value;
+		location.href="/delete?id="+id;
+	}
+}
+</script>
+</head>
+<body>
+<h1>도서 정보 변경</h1>
+<form action="/update" method="post">
+	<div>
+		제목 : <input type="text" name="title" th:value="${book.title}" required>
+	</div>
+	<div>
+		저자 : <input type="text" name="author" th:value="${book.author}" required>
+	</div>
+	<div>
+		장르 : <input type="text" name="genre" th:value="${book.genre}" required>
+	</div>
+	<br>
+	<input type="hidden" id="id" name="id" th:value="${book.id}">
+	<button>수정</button>
+	<button type="button" onclick="confirmDelete()">삭제</button>
+	<button type="button" onclick="location.href='/'">목록</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>학생 목록</title>
+<style>
+table {
+	border-collapse: collapse;
+	width: 80%;
+	margin: 20px auto;
+}
+
+th, td {
+	border: 1px solid #aaa;
+	padding: 8px 12px;
+	text-align: center;
+}
+
+th {
+	background-color: #f4f4f4;
+}
+
+form {
+	width: 80%;
+	margin: 20px auto;
+	text-align: center;
+}
+
+input, select {
+	padding: 5px 10px;
+	margin: 0 5px;
+}
+
+button {
+	padding: 5px 10px;
+}
+</style>
+</head>
+<body>
+<h2 style="text-align: center;">학생 목록</h2>
+
+<form action="/grade" method="get" style="margin-bottom: 10px;">
+	학년 선택: <select name="grade" id="gradeSelect">
+		<option value="0" th:selected="${selectedGrade == 0}">전체</option>
+		<option value="1" th:selected="${selectedGrade == 1}">1학년</option>
+		<option value="2" th:selected="${selectedGrade == 2}">2학년</option>
+		<option value="3" th:selected="${selectedGrade == 3}">3학년</option>
+		<option value="4" th:selected="${selectedGrade == 4}">4학년</option>
+	</select>
+	<button type="submit">조회</button>
+</form>
+
+<form action="/prof" method="get">
+	교수 이름: <input type="text" name="profName" placeholder="교수 이름 입력">
+	<button type="submit">조회</button>
+</form>
+
+<table>
+<thead>
+	<tr>
+		<th>학생 이름</th>
+		<th>학년</th>
+		<th>학과</th>
+		<th>지도 교수</th>
+	</tr>
+</thead>
+<tbody>
+	<tr th:each="student : ${students}">
+		<td th:text="${student[0]}">학생이름</td>
+		<td th:text="${student[1]}">학년</td>
+		<td th:text="${student[2]}">학과</td>
+		<td th:text="${student[3]}">교수</td>
+	</tr>
+</tbody>
+</table>
+</body>
+</html>

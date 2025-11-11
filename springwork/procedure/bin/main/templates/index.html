@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>한줄 메모장</title>
+</head>
+<body>
+<h2>한줄 메모장</h2>
+
+<form th:action="@{/add}" method="post">
+	<input type="text" name="content" maxlength="200" required>
+	<button type="submit">저장</button>
+</form>
+
+<hr>
+
+<table border="1" cellpadding="6">
+<thead>
+	<tr>
+		<th>글번호</th>
+		<th>메모</th>
+		<th>날짜</th>
+	</tr>
+</thead>
+<tbody>
+	<tr th:each="m : ${memos}">
+		<td th:text="${m.id}"></td>
+		<td>
+			<a th:href="@{|/edit/${m.id}|}">
+				<span th:text="${m.content}"></span>
+			</a>
+		</td>
+		<td>
+			<span th:text="${#temporals.format(m.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+		</td>
+	</tr>
+</tbody>
+</table>
+</body>
+</html>

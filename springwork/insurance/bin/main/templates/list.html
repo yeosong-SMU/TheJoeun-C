@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>보험 목록</title>
+</head>
+<body>
+<h1>보험 목록</h1>
+<button type="button" onclick="location.href='/insurance/add'">새 보험 추가</button>
+<table border="1">
+	<thead>
+		<tr>
+			<th>고객번호</th>
+			<th>나이</th>
+			<th>성별</th>
+			<th>운전 경력</th>
+			<th>사고 이력</th>
+			<th>차량 종류</th>
+			<th>연간 주행 거리</th>
+			<th>차량 연식</th>
+			<th>보험료</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="insurance : ${insurances}">
+			<td><a th:href="@{/insurance/edit/{id}(id=${insurance.id})}" th:text="${insurance.id}"></a></td>
+			<td th:text="${insurance.age}"></td>
+			<td th:text="${insurance.gender == 0 ? '여성' : '남성'}"></td>
+			<td th:text="${insurance.drivingExperience}"></td>
+			<td th:text="${insurance.accidentHistory == 0 ? '없음' : '있음'}"></td>
+			<td th:text="${insurance.vehicleType}"></td>
+			<td th:text="${insurance.annualMileage}"></td>
+			<td th:text="${insurance.vehicleAge}"></td>
+			<td th:text="${insurance.insurance}"></td>
+		</tr>
+	</tbody>
+</table>
+</body>
+</html>

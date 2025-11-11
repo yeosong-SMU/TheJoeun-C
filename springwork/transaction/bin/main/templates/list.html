@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>주문 목록</title>
+</head>
+<body>
+<h2>주문 목록</h2>
+<div th:if="${msg}" th:text="${msg}"></div>
+<table border="1">
+<thead>
+	<tr>
+		<th>ID</th>
+		<th>주문번호</th>
+		<th>금액</th>
+		<th>상태</th>
+		<th>액션</th>
+	</tr>
+</thead>
+<tbody>
+	<tr th:each="o : ${orders}">
+		<td th:text="${o.id}"></td>
+		<td th:text="${o.orderNo}"></td>
+		<td th:text="${o.orderAmount}"></td>
+		<td th:text="${o.status}"></td>
+		<td>
+			<form th:action="@{|/orders/${o.id}/refund|}" method="post">
+				<input type="text" name="reason" placeholder="사유">
+				<button type="submit" th:disabled="${o.status != 'PAID'}">환불</button>
+			</form>
+		</td>
+	</tr>
+</tbody>
+</table>
+</body>
+</html>

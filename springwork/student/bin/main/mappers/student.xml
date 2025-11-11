@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.student.StudentDAO">
+	<select id="list_all" resultType="com.example.student.StudentDTO">
+		select * from stud s, major m, prof p
+		where s.majorno=m.majorno(+) and s.profno=p.profno(+)
+		order by s.sname
+	</select>
+	
+	<select id="list" resultType="com.example.student.StudentDTO">
+		select * from stud s, major m, prof p
+		where s.majorno=m.majorno(+) and s.profno=p.profno(+) and s.majorno like #{majorno}
+		order by s.sname
+	</select>
+	
+	<insert id="insert" parameterType="com.example.student.StudentDTO">
+		insert into stud (studno, sname, grade, majorno, profno)
+		values (#{studno}, #{sname}, #{grade}, #{majorno}, #{profno})
+	</insert>
+	
+	<select id="detail" resultType="com.example.student.StudentDTO">
+		select * from stud where studno=#{studno}
+	</select>
+	
+	<update id="update" parameterType="com.example.student.StudentDTO">
+		update stud set sname=#{sname}, grade=#{grade}, majorno=#{majorno}, profno=#{profno}
+		where studno=#{studno}
+	</update>
+	
+	<delete id="delete">
+		delete from stud where studno=#{studno}
+	</delete>
+	
+	<select id="list_major" resultType="com.example.student.MajorDTO">
+		select majorno, mname
+		from major
+	</select>
+	
+	<select id="list_prof" resultType="com.example.student.ProfessorDTO">
+		select profno, pname
+		from prof
+	</select>
+</mapper>

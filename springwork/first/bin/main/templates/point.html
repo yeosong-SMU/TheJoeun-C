@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:replace="~{include/menu :: menu}"></div>
+	
+	<form th:action="@{/point_result.do}" method="post">
+		이름 <input type="text" name="name" /><br>
+		국어 <input type="text" name="kor" /><br>
+		영어 <input type="text" name="eng" /><br>
+		수학 <input type="text" name="mat" /><br>
+		<input type="submit" value="확인" />
+	</form>
+</body>
+</html>

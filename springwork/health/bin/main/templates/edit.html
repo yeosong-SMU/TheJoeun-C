@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>건강 정보 수정</title>
+<script>
+async function updatePrediction() {
+	const age = parseInt(document.getElementById('age').value);
+	const gender = parseInt(document.getElementById('gender').value);
+	const height = parseFloat(document.getElementById('height').value);
+	const weight = parseFloat(document.getElementById('weight').value);
+	const systolicBp = parseInt(document.getElementById('systolicBp').value);
+	const diastolicBp = parseInt(document.getElementById('diastolicBp').value);
+	const cholesterol = parseInt(document.getElementById('cholesterol').value);
+	const smoker = parseInt(document.getElementById('smoker').value);
+	const exerciseFreq = parseInt(document.getElementById('exerciseFreq').value);
+	const bmi = Math.round((weight / ((height / 100) ** 2)) * 10) / 10;
+	
+	const data = {
+			age, gender, height, weight, bmi, 
+			systolic_bp: systolicBp,
+			diastolic_bp: diastolicBp,
+			cholesterol, smoker, exercise_freq: exerciseFreq
+	};
+	
+	try {
+		const response = await fetch("http://localhost:5000/predict", {
+			method: "POST",
+			headers: { "Content-Type" : "application/json" },
+			body: JSON.stringify(data)
+		});
+		
+		const result = await response.json();
+		document.getElementById('bmi').value = bmi;
+		document.getElementById('score').value = result.score;
+		document.getElementById('message').value = result.message;
+	} catch(error) {
+		console.error("예측 실패: ", error);
+	}
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+	const fields = document.querySelectorAll("input, select");
+	fields.forEach(f => {
+		if(f.name !== 'id' && f.name !== 'score' && f.name !== 'message') {
+			f.addEventListener("change", updatePrediction);
+		}
+	});
+});
+</script>
+</head>
+<body>
+<h1>건강 정보 수정</h1>
+
+<form th:action="@{/health/edit}" method="post">
+	<input type="hidden" name="id" th:value="${health.id}">
+	<table>
+		<tr>
+			<td>나이</td>
+			<td><input type="number" id="age" name="age" th:value="${health.age}" required></td>
+		</tr>
+		<tr>
+			<td>성별</td>
+			<td>
+				<select id="gender" name="gender" required>
+					<option value="0" th:selected="${health.gender == 0}">남성</option>
+					<option value="1" th:selected="${health.gender == 1}">여성</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>키(cm)</td>
+			<td><input type="number" id="height" name="height" step="0.1" th:value="${health.height}" required></td>
+		</tr>
+		<tr>
+			<td>몸무게(kg)</td>
+			<td><input type="number" id="weight" name="weight" step="0.1" th:value="${health.weight}" required></td>
+		</tr>
+		<tr>
+			<td>BMI</td>
+			<td><input type="number" id="bmi" name="bmi" step="0.1" th:value="${health.bmi}" required></td>
+		</tr>
+		<tr>
+			<td>수축기 혈압</td>
+			<td><input type="number" id="systolicBp" name="systolicBp" th:value="${health.systolicBp}" required></td>
+		</tr>
+		<tr>
+			<td>이완기 혈압</td>
+			<td><input type="number" id="diastolicBp" name="diastolicBp" th:value="${health.diastolicBp}" required></td>
+		</tr>
+		<tr>
+			<td>콜레스테롤</td>
+			<td><input type="number" id="cholesterol" name="cholesterol" th:value="${health.cholesterol}" required></td>
+		</tr>
+		
+		<tr>
+			<td>흡연 여부</td>
+			<td>
+				<select id="smoker" name="smoker" required>
+					<option value="0" th:selected="${health.smoker == 0}">비흡연</option>
+					<option value="1" th:selected="${health.smoker == 1}">흡연</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>운동 빈도</td>
+			<td><input type="number" id="exerciseFreq" name="exerciseFreq" th:value="${health.exerciseFreq}" required></td>
+		</tr>
+		<tr>
+			<td>예측 점수</td>
+			<td><input type="number" id="score" name="score" step="0.1" th:value="${health.score}" required></td>
+		</tr>
+		<tr>
+			<td>메시지</td>
+			<td><input type="text" id="message" name="message" th:value="${health.message}" readonly></td>
+		</tr>
+	</table>
+	
+	<button type="submit">수정</button>
+	<button type="submit" onclick="this.form.action='/health/delete'; return confirm('삭제하시겠습니까?')">삭제</button>
+	<button type="button" onclick="location.href='/'">목록</button>
+</form>
+</body>
+</html>

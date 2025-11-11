@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>입시정보 수정</title>
+<script>
+	async function predict() {
+		const kor = parseInt(document.getElementById("kor").value);
+		const eng = parseInt(document.getElementById("eng").value);
+		const math = parseInt(document.getElementById("math").value);
+		const wishMajor = document.getElementById("wishMajor").value;
+		
+		if(isNaN(kor) || isNaN(eng) || isNaN(math)) return;
+		
+		try {
+			const response = await fetch("http://localhost:5000/predict", {
+				method: "POST",
+				headers: { "Content-Type": "application/json"}, 
+				body: JSON.stringify({
+					kor: kor, 
+					eng: eng, 
+					math: math, 
+					wish_major: wishMajor
+				})
+			});
+			
+			const data = await response.json();
+			document.getElementById("result").value = data.result;
+			document.getElementById("probability").value = data.probability;
+		} catch (e) {
+			console.error("Flask 예측 실패: ", e);
+		}
+	}
+	
+	window.addEventListener("DOMContentLoaded", () => {
+		const fields = ["kor", "eng", "math", "wishMajor"];
+		fields.forEach(id => {
+			document.getElementById(id).addEventListener("change", predict);
+		});
+	});
+</script>
+</head>
+<body>
+<h2>입시정보 수정</h2>
+<form th:action="@{/edit}" method="post" th:object="${admission}">
+	<input type="hidden" th:field="*{id}" />
+	국어: <input type="number" id="kor" th:field="*{kor}" onchange="predict()" />
+	<br />
+	영어: <input type="number" id="eng" th:field="*{eng}" onchange="predict()" />
+	<br />
+	수어: <input type="number" id="math" th:field="*{math}" onchange="predict()" />
+	<br />
+	희망 전공: <input type="text" id="wishMajor" th:field="*{wishMajor}" onchange="predict()" />
+	<br />
+	예측 결과: <input type="text" id="result" th:field="*{result}" readonly />
+	<br />
+	예측 확률: <input type="text" id="probability" th:field="*{probability}" readonly />
+	<br />
+	<button type="submit">저장</button>
+	<button type="submit" onclick="this.form.action='/delete'; return confirm('삭제하시겠습니까?')">삭제</button>
+</form>
+</body>
+</html>

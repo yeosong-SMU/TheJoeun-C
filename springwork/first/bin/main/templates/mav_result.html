@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:replace="~{include/menu :: menu}"></div>
+	
+	상품명: <span th:text="${map.dto.name}">[상품명]</span><br>
+	가격: <span th:text="${map.dto.price}">[가격]</span>
+</body>
+</html>

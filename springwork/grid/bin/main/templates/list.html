@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>학생 점수 관리</title>
+<!-- ↓ 핵심 -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<style>
+th, td {
+	border: 1px solid #ccc;
+	padding: 5px;
+	text-align: center;
+	cursor: pointer;
+}
+input.cell-input {
+	width: 100%;
+	box-sizing: border-box;
+}
+</style>
+</head>
+<body>
+<h1>학생 점수 관리</h1>
+
+<button id="addRowBtn">추가</button>
+<button id="saveBtn">저장</button>
+
+<table id="studentTable" border="1">
+	<thead>
+		<tr>
+			<th data-field="studentNum" data-order="asc">학번</th>
+			<th data-field="studentName" data-order="asc">학번</th>
+			<th>국어</th>
+			<th>영어</th>
+			<th>수학</th>
+			<th>총점</th>
+			<th>평균</th>
+			<th>삭제</th>
+		</tr>
+	</thead>
+	<tbody></tbody>
+</table>
+
+<script>
+const API_BASE = '/api/scores';
+
+function addRow(data = {}) {
+	const tr = $('<tr></tr>');
+	tr.append(`<td>
+		<input class="cell-input" size="10" 
+		data-field="studentNum" 
+		value="${data.studentNum || ''}" 
+		${data.studentNum ? 'readonly' : ''}></td>`);
+	tr.append(`<td>
+		<input class="cell-input" size="10" 
+		data-field="studentName" 
+		value="${data.studentName || ''}" 
+		${data.studentName ? 'readonly' : ''}></td>`);
+	tr.append(`<td>
+		<input class="cell-input" size="5" 
+		data-field="kor" 
+		value="${data.kor || ''}"></td>`);
+	tr.append(`<td>
+			<input class="cell-input" size="5" 
+			data-field="eng" 
+			value="${data.eng || ''}"></td>`);
+	tr.append(`<td>
+			<input class="cell-input" size="5" 
+			data-field="math" 
+			value="${data.math || ''}"></td>`);
+	tr.append(`<td class="tot">${data.tot || 0}</td>`);
+	tr.append(`<td class="avg">${data.avg || '0.00'}</td>`);
+	tr.append(`<td><button class="deleteBtn">삭제</button></td>`);
+	$('#studentTable tbody').append(tr);
+}
+
+function loadData() {
+	$.get(API_BASE, function(data) {
+		$('#studentTable tbody').empty();  //테이블 내용 초기화
+		data.forEach(d => addRow(d));   //table tbody 채우기
+	});
+}
+
+function saveRow(tr) {   //저장
+	const rowData = {};
+	tr.find('input.cell-input').each(function() {
+		const field = $(this).data('field');
+		let val = $(this).val();
+		if(['kor', 'eng', 'math'].includes(field)) val = parseFloat(val) || 0;
+		rowData[field] = val;
+	});
+	rowData.tot = rowData.kor + rowData.eng + rowData.math;
+	rowData.avg = (rowData.tot / 3).toFixed(2);
+	tr.find('.tot').text(rowData.tot);
+	tr.find('.avg').text(rowData.avg);
+	
+	$.ajax({
+		url: API_BASE,
+		type: 'POST',
+		contentType: 'application/json',  //=> @ReequestBody
+		data: JSON.stringify(rowData),
+		success: function(data) {
+			tr.find('input[data-field="studentNum"]').val(data.studentNum).prop('readonly', true);
+		},
+		error: function(){ alert('저장 실패'); }
+	});
+}
+
+loadData();
+
+$('#addRowBtn').click(() => addRow());  //추가 버튼
+
+//삭제 버튼
+$('#studentTable').on('click', '.deleteBtn', function() {
+	if(confirm('삭제하시겠습니까?')) {
+		const tr = $(this).closest('tr');
+		const studentNum = tr.find('input[data-field="studentNum"]').val();
+		if(studentNum) {
+			$.ajax({
+				url: `${API_BASE}/${studentNum}`,
+				type: 'DELETE',
+				success: () => tr.remove(),
+				error: () => alert('삭제 실패')
+			});
+		} else {
+			tr.remove();
+		}
+	}
+});
+
+$('#studentTable').on('keydown', 'input.cell-input', function(e){
+	const tr= $(this).closest('tr');
+	const tds = tr.find('input.cell-input');
+	const idx = tds.index(this);
+	
+	//엔터키 누르면 저장
+	if (e.key === 'Enter') {
+		e.preventDefault();
+		saveRow(tr);
+	}
+	
+	//탭키 누르면 커서 옆으로 이동
+	if(e.key === 'Tab') {
+		e.preventDefault();
+		if($(this).val() === '0') $(this).val('');
+		let nextIdx = idx + (e.shiftKey ? -1 : 1);
+		if(nextIdx < 0) nextIdx = tds.length - 1;
+		if(nextIdx >= tds.length) nextIdx = 0;
+		tds.eq(nextIdx).focus();
+	}
+});
+
+//한꺼번에 저장
+$('#saveBtn').click(function() {
+	                          //반복문
+	$('#studentTable tbody tr').each(function() {
+		saveRow($(this));
+	});
+	//딜레이 시간지연   500 => 0.5초
+	setTimeout(() => alert('저장 완료!'), 500);
+});
+
+//학번/이름 오름차순/내림차순
+//필드 한번 누르면 오름차순, 한번 더 누르면 내림차순
+$('#studentTable thead th[data-field]').click(function() {
+	const field = $(this).data('field');
+	let order = $(this).data('order');
+	const rows = $('#studentTable tbody tr').get();
+	
+	rows.sort((a, b) => {
+		const valA = $(a).find(`input[data-field="${field}"]`).val();
+		const valB = $(b).find(`input[data-field="${field}"]`).val();
+		if(field === 'studentNum') {
+			return order === 'asc' 
+					? valA.localeCompare(valB, undefined, {numeric:true}) 
+					: valB.localeCompare(valA, undefined, {numeric:true});
+		} else {
+			return order === 'asc' 
+					? valA.localeCompare(valB)
+					: valB.localeCompare(valA);
+		}
+	});
+	
+	$.each(rows, (_, row) => $('#studentTable tbody').append(row));
+	$(this).data('order', order === 'asc' ? 'desc' : 'asc');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>영화 수정</title>
+<script>
+function fetchRecommendations() {
+	const movieId = document.querySelector("input[name='movieId']").value;
+	fetch(`http://localhost:5000/recommend_by_movie/${movieId}?top_n=5`)
+	.then(response => response.json())
+	.then(data => {
+		const container = document.getElementById("recommendation-list");
+		container.innerHTML = "";
+		if(data.recommendations && data.recommendations.length > 0) {
+			data.recommendation.forEach(item => {
+				const div = document.createElement("div");
+				div.textContent = `[${item.movieId}] ${item.title} (${item.score.toFixed(2)})`;
+				container.appendChild(div);
+			});
+		} else {
+			container.innerHTML = "<div>추천 결과가 없습니다.</div>";
+		}
+	})
+	.catch(error => {
+		console.error("추천 요청 오류: ", error);
+		document.getElementById("recommendation-list").innerHTML = "<div>추천 요청 실패</div>";
+	});
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+	fetchRecommendations();
+});
+</script>
+</head>
+<body>
+<h2>영화 수정</h2>
+
+<form action="/edit" method="post">
+	<input type="hidden" name="movieId" th:value="${movie.movieId}">
+	<label>제목: <input type="text" name="title" th:value="${movie.title}"></label><br>
+	<label>장르: 
+		<select name="genre">
+			<option th:selected="${movie.genre == '애니메이션/가족'}">애니메이션/가족</option>
+			<option th:selected="${movie.genre == '애니메이션/모험'}">애니메이션/모험</option>
+			<option th:selected="${movie.genre == '애니메이션/코미디'}">애니메이션/코미디</option>
+			<option th:selected="${movie.genre == '애니메이션/액션'}">애니메이션/액션</option>
+			<option th:selected="${movie.genre == '드라마/판타지'}">드라마/판타지</option>
+			<option th:selected="${movie.genre == '드라마'}">드라마</option>
+			<option th:selected="${movie.genre == '드라마/코미디'}">드라마/코미디</option>
+			<option th:selected="${movie.genre == '액션/어드벤처'}">액션/어드벤처</option>
+		</select>
+	</label><br>
+	<label>관람등급: 
+		<select name="ratingAge">
+			<option th:selected="${movie.ratingAge == 0}" value="0">전체 관람가</option>
+			<option th:selected="${movie.ratingAge == 12}" value="12">12세 이상</option>
+			<option th:selected="${movie.ratingAge == 15}" value="15">15세 이상</option>
+			<option th:selected="${movie.ratingAge == 19}" value="19">19세 이상</option>
+		</select>
+	</label><br>
+	
+	<button type="submit">수정</button>
+	<button type="submit" onclick="this.form.action='delete';return confirm('삭제하시겠습니까?')">삭제</button>
+	<button onclick="location.href='/'">목록</button>
+</form>
+
+<h3>추천 영화</h3>
+<div id="recommendation-list"></div>
+
+</body>
+</html>

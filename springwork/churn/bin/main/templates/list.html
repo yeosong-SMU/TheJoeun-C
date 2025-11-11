@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Churn 목록</title>
+</head>
+<body>
+<h1>Churn 목록</h1>
+
+<a href="/churn/add">
+	<button>Churn 추가</button>
+</a>
+<a href="/churn/upload">
+	<button type="submit">CSV 파일 업로드</button>
+</a>
+
+<table border="1">
+	<thead>
+		<tr>
+			<th>고객 ID</th>
+			<th>나이</th>
+			<th>성별</th>
+			<th>계약 기간(개월)</th>
+			<th>월 요금</th>
+			<th>계약 유형</th>
+			<th>결제 방식</th>
+			<th>인터넷 서비스</th>
+			<th>이탈 여부</th>
+			<th>이탈 확률</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="churn : ${churnList}">
+			<td><a th:href="@{/churn/edit/{customerId}(customerId=${churn.customerId})}" th:text="${churn.customerId}"></a></td>
+			<td th:text="${churn.age}"></td>
+			<td th:text="${churn.gender}"></td>
+			<td th:text="${churn.tenureMonths}"></td>
+			<td th:text="${churn.monthlyCharges}"></td>
+			<td th:text="${churn.contractType}"></td>
+			<td th:text="${churn.paymentMethod}"></td>
+			<td th:text="${churn.internetService}"></td>
+			<td th:text="${churn.churn == 1 ? '이탈' : '유지'}"></td>
+			<td th:text="${churn.churnProbability}"></td>
+		</tr>
+	</tbody>
+</table>
+</body>
+</html>

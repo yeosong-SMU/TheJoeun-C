@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>당뇨병 예측 결과 목록</title>
+</head>
+<body>
+<h2>당뇨병 예측</h2>
+
+<button type="button" onclick="location.href='/diabetes/upload-form'">데이터 등록</button>
+<br>
+
+<table border="1" cellpadding="5" cellspacing="0">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Glucose</th>
+			<th>BMI</th>
+			<th>Age</th>
+			<th>Prediction</th>
+			<th>확률</th>
+			<th>관리</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="d : ${list}">
+			<td th:text="${d.id}">1</td>
+			<td th:text="${d.glucose}">140</td>
+			<td th:text="${d.bmi}">32.0</td>
+			<td th:text="${d.age}">45</td>
+			<td th:text="${d.prediction == 1 ? '당뇨병' : '정상'}">당뇨병</td>
+			<td th:text="${d.probability}"></td>
+			<td><a th:href="@{'/diabetes/edit/' + ${d.id}}">수정</a> | <a th:href="@{'/diabetes/delete/' + ${d.id}}" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a></td>
+		</tr>
+	</tbody>
+</table> 
+</body>
+</html>
