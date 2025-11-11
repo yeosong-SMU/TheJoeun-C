@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;book_jpa/src/main/resources/templates/detail.html&apos; to &apos;edit.html&apos;" description="Rename resource &apos;detail.html&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main/resources/templates/detail.html" name="edit.html" stamp="1752026684451" updateReferences="true"/>
+</session>

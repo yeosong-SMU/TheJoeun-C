@@ -1,0 +1,30 @@
+<h2>회원 목록 (관리자 전용)</h2>
+<table border="1">
+    <tr>
+        <th>아이디</th>
+        <th>이름</th>
+        <th>권한</th>
+        <th>수정</th>
+        <th>삭제</th>
+    </tr>
+    <% members.forEach(member => { %>
+    <tr>
+        <form method="post" action="/member/update">
+            <td>
+                <%= member.userid %>
+                <input type="hidden" name="userid" value="<%= member.userid %>" />
+            </td>
+            <td><input name="name" value="<%= member.name %>" /></td>
+            <td><%= member.user_type %></td>
+            <td><button type="submit">수정</button></td>
+        </form>
+        <form method="post" action="/member/remove">
+            <td>
+                <input type="hidden" name="userid" value="<%= member.userid %>" />
+                <button type="submit">삭제</button>
+            </td>
+        </form>
+    </tr>
+<% }) %>
+</table>
+<a href="/member/logout">로그아웃</a>

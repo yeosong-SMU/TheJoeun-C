@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="menuFragment">
+	<a class="btn btn-primary" href="/">Home</a>
+	<a href="/product/list" class="btn btn-primary">상품 목록</a>
+	<a th:if="${session.userid != null}" href="/cart/list" class="btn btn-primary">장바구니</a>
+	<a th:if="${session.userid != null}" href="/order/list" class="btn btn-primary">주문목록</a>
+	<a href="/board/list" class="btn btn-primary">게시판</a>
+	
+	<div style="text-align: right;">
+		<a th:if="${session.userid == null}" href="/member/login" class="btn btn-success">로그인</a>
+		<p th:if="${session.userid != null}">
+			[[${session.name}]]님이 로그인중입니다. <a href="/member/logout" class="btn btn-danger">로그아웃</a>
+		</p>
+	</div>
+	<hr>
+</th:block>
+</html>

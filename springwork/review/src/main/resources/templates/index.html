@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>영화 감정 리뷰 분석</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+<h2>영화 감정 리뷰 분석</h2>
+
+<form method="post" action="/sentiment">
+	<label for="text">리뷰 텍스트</label><br/>
+	<textarea id="text" name="text" rows="5" cols="80" 
+	placeholder="연기가 좋아서 몰입감 최고였습니다. 또 보고 싶어요!" 
+	th:text="${text} != null ? ${text} : ''"></textarea><br/>
+	<button type="submit">감정 분석</button>
+</form>
+
+<div th:if="${label != null or error != null}">
+	<div th:if="${error != null}" th:text="${error}">오류 메시지</div>
+	
+	<div th:if="${label != null}">
+		<div>
+			<span th:text="${label} == 'POS' ? '긍정 (POS)' : '부정 (NEG)'">라벨</span>
+			<span th:text="'POS 확률: ' + (${#numbers.formatDecimal(score, 1, 2)} * 100) + '%'">POS 확률</span>
+		</div>
+		<p>
+			입력 문장: <b th:text="${text}">사용자 입력</b>
+		</p>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/mylayout}">
+<th:block layout:fragment="content">
+<script>
+$(function() {
+	$("#btnList").click(function() {
+		location.href="/product/list";
+	});
+	$("#btnDelete").click(function() {
+		if(confirm("장바구니를 비우시겠습니까?")) {
+			location.href="/cart/deleteAll";
+		}
+	});
+	$("#btnOrder").click(function() {
+		location.href="/order/write";
+	});
+});
+</script>
+<div class="container-fluid">
+<h2 class="text-center">장바구니</h2>
+<p th:if="${map.count == 0}">장바구니가 비었습니다.</p>
+<div th:if="${map.count > 0 }">
+	<form method="post" action="/cart/update">
+		<table class="table table-hover table-bordered">
+			<tr>
+				<th>상품명</th>
+				<th>단가</th>
+				<th>수량</th>
+				<th>금액</th>
+				<th> </th>
+			</tr>
+			<tr th:each="row:${map.list}">
+				<td>[[${row.product.productName}]]</td>
+				<td>[[${row.product.price}]]</td>
+				<td>
+					<input type="number" style="width:50px;" min="0" max="100" name="amount" th:value="${row.amount}">
+					<input type="hidden" name="cartId" th:value="${row.cartId}">
+					<input type="hidden" name="productCode" th:value="${row.product.productCode}">
+				</td>
+				<td>[[${row.product.price * row.amount}]]</td>
+				<td><a th:href="@{/cart/delete?cartId=}+${row.cartId}" class="btn btn-danger">삭제</a></td>
+			</tr>
+			<tr>
+				<td colspan="5" align="center">
+					장바구니 금액 합계
+					[[${#numbers.formatInteger(map.sumMoney, 0, 'COMMA')}]]원<br>
+					배송료: [[${map.fee}]]<br>
+					총합계: [[${#numbers.formatInteger(map.sum, 0, 'COMMA')}]]원
+				</td>
+			</tr>
+		</table>
+		
+		<button id="btnUpdate" class="btn btn-primary">수정</button>
+		<button type="button" id="btnDelete" class="btn btn-danger">장바구니 비우기</button>
+		<button type="button" id="btnOrder" class="btn btn-primary">주문하기</button>
+		<button type="button" id="btnList" class="btn btn-info">상품목록</button>
+	</form>
+</div>
+</div>
+</th:block>
+</html>

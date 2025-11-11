@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>CSV -> JSON -> 차트</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<h2>CSV 데이터 시각화</h2>
+
+<form method="get" th:action="@{/series}">
+	최근 행수
+	<input type="number" name="limit" min="10" max="5000" th:value="${limit}" />
+	<button type="submit">불러오기</button>
+	<button type="button" onclick="location.href='/'">Home</button>
+</form>
+
+<canvas id="line" width="800" height="360"></canvas>
+
+<script th:inline="javascript">
+const rows = /*[[${data}]]*/ [];   //Flask JSON 주입
+const labels = rows.map(r => r.ts);
+const values = rows.map(r => r.y);
+
+new Chart(document.getElementById('line').getContext('2d'), {
+	type: 'line',
+	data: {
+		labels,
+		datasets: [{
+			label: 'y',
+			data: values,
+			borderColor: 'rgb(54, 162, 235)',
+			borderWidth: 2,
+			pointRadius: 0,
+			tension: 0.2
+		}]
+	},
+	options: {
+		responsive: false,
+		scales: { y: { beginAtZero: false } }
+	}
+});
+</script>
+</body>
+</html>

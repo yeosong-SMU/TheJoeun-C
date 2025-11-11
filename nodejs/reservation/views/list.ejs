@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title><%= title %></title>
+    <script>
+        function delete_reservation(id) {
+            if (confirm('삭제하시겠습니까?')) {
+                location.href = '/delete/' + id;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>예약 목록</h1>
+    <%
+    function formatDate(d) {
+        const date = new Date(d);
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    }
+    %>
+    <ul>
+        <% reservations.forEach(item => { %>
+            <li>
+                <%= formatDate(item.date) %> <%= item.time %> - <%= item.name %> (<%= item.service %>)
+                <button type="button" onclick="location.href='/edit/<%= item._id %>'">수정</button>
+                <button type="button" onclick="delete_reservation('<%= item._id %>')">삭제</button>
+            </li>
+        <% }) %>
+    </ul>
+    <a href="/new">새 예약 만들기</a>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/mylayout}">
+<th:block layout:fragment="content">
+<script>
+function product_delete() {
+	if(confirm("삭제하시겠습니까?")) {
+		document.form1.action="/product/delete";
+		document.form1.submit();
+	}
+}
+function product_update() {
+	const productName = document.form1.productName.value;
+	const price = document.form1.price.value;
+	const description = document.form1.description.value;
+	if(productName == "") {
+		alert("상품명을 입력하세요.");
+		document.form1.productName.focus();
+		return;
+	}
+	if(price == "") {
+		alert("가격을 입력하세요.");
+		document.form1.price.focus();
+		return;
+	}
+	if(description == "") {
+		alert("상품설명을 입력하세요.");
+		document.form1.description.focus();
+		return;
+	}
+	document.form1.action="/product/update";
+	document.form1.submit();
+}
+</script>
+
+<div class="container-fluid">
+	<form name="form1" method="post" enctype="multipart/form-data">
+		<div class="mb-3">
+			<label for="productName" class="form-label">상품명</label>
+			<input class="form-control" id="productName" name="productName" th:value="${dto.productName}">
+		</div>
+		<div class="mb-3">
+			<label for="price" class="form-label">가격</label>
+			<input class="form-control" id="price" name="price" th:value="${dto.price}">
+		</div>
+		<div class="mb-3">
+			<label for="description" class="form-label">상품설명</label>
+			<textarea class="form-control" id="description" name="description" rows="3">[[${dto.description}]]</textarea>
+		</div>
+		<div class="mb-3">
+			<label for="img" class="form-label">상품이미지</label>
+			<img th:src="@{/images/}+${dto.filename}" width="300px" height="300px"><br>
+			<input type="file" class="form-control" id="img" name="img">
+		</div>
+		
+		<input type="hidden" name="productCode" th:value="${dto.productCode}">
+		<button type="button" class="btn btn-primary" onclick="product_update()">수정</button>
+		<button type="button" class="btn btn-danger" onclick="product_delete()">삭제</button>
+		<button type="button" class="btn btn-info" onclick="location.href='/product/list'">목록</button>
+	</form>
+</div>
+</th:block>
+</html>

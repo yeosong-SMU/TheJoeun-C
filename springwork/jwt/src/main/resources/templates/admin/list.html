@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>회원 목록</title>
+</head>
+<body>
+<h2>회원 목록 (ADMIN)</h2>
+<table border="1" cellpadding="6">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>아이디</th>
+			<th>이름</th>
+			<th>권한</th>
+			<th>수정</th>
+			<th>삭제</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="m : ${members}">
+			<td th:text="${m.id}"></td>
+			<td th:text="${m.username}"></td>
+			<td th:text="${m.displayName}"></td>
+			<td th:text="${m.role}"></td>
+			<td>
+				<a th:href="@{'/admin/members/' + ${m.id} + '/edit'}">
+					edit
+				</a>
+			</td>
+			<td>
+				<form th:action="@{'/admin/members/' + ${m.id} + '/delete'}" method="post">
+					<button type="submit">삭제</button>
+				</form>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p><a th:href="@{/main}">메인으로</a></p>
+</body>
+</html>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename compilation unit &apos;com.example.backend.memo.emoDAO.java&apos; to &apos;MemoDAO.java&apos;&#x0D;&#x0A;- Original project: &apos;backend&apos;&#x0D;&#x0A;- Original element: &apos;com.example.backend.memo.emoDAO.java&apos;&#x0D;&#x0A;- Renamed element: &apos;com.example.backend.memo.MemoDAO.java&apos;" description="Rename compilation unit &apos;emoDAO.java&apos;" flags="2" id="org.eclipse.jdt.ui.rename.compilationunit" input="/src\/main\/java=/gradle_scope=/main=/=/gradle_used_by_scope=/main,test=/&lt;com.example.backend.memo{emoDAO.java" name="MemoDAO.java" references="false" stamp="1751251847979" version="1.0"/>
+</session>

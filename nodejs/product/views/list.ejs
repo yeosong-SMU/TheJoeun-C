@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <h2>상품관리</h2>
+    <button type="button" onclick="location.href='form'">추가</button>
+
+    <table border="1" width="500px">
+        <tr align="center">
+            <th>상품코드</th>
+            <th>&nbsp;</th>
+            <th>상품명</th>
+            <th>가격</th>
+        </tr>
+        <% for(var i = 0; i < items.length; i++) {
+            item = items[i]; %>
+            <tr align="center">
+                <td><%= item.product_code %></td>
+                <td>
+                    <% if(item.filename != '-' ) { %>
+                        <img src="/images/<%= item.filename %>" width="100px" height="100px">
+                    <% } %>
+                </td>
+                <td><a href="/detail/<%= item.product_code %>">
+                    <%= item.product_name %>
+                </a></td>
+                <td><%= item.price %></td>
+            </tr>
+        <% } %>
+    </table>
+</body>
+</html>

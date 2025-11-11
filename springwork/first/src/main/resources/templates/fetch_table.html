@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+	$(function() {
+		$("#button1").click(function() {
+			let num = $("#num").val();
+			fetch("/fetch_table_result.do?num=" + num)
+			.then(response => response.text())
+			.then(txt => {
+				$("#result").html(txt);
+			});
+		});
+	});
+</script>
+</head>
+<body>
+	<div th:replace="~{include/menu :: menu}"></div>
+	
+	<h2>구구단 계산</h2>
+	단을 입력하세요:
+	<input type="number" id="num" value="3" />
+	<input type="button" id="button1" value="확인" />
+	<div id="result"></div>
+</body>
+</html>

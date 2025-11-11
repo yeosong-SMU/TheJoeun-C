@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <input id="a" type="text" v-bind:value="message"> <img v-bind:src="img_path">
+        <input id="a" type="text" :value="message"> <img :src="img_path">
+    </div>
+    <script src="https://unpkg.com/vue"></script>
+    <script>
+        var vm = Vue.createApp({
+            name: "App",
+            data() {
+                return {
+                    message: "hello",
+                    img_path: "images/melon.jpg",
+                };
+            },
+        }).mount("#app");
+    </script>
+</body>
+</html>

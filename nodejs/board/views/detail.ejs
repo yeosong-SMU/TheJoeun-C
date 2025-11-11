@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 상세</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script>
+        function home() {
+            location.href = '/';
+        }
+        function del(idx) {
+            if(confirm('삭제하시겠습니까?')) {
+                location.href = '/delete/' + idx;
+            }
+        }
+    </script>
+</head>
+<body class="container my-4">
+    <h2 class="mb-4">게시글 보기 및 수정</h2>
+
+    <form method="post" name="form1" enctype="multipart/form-data" action="/update/<%= row.idx %>">
+        <div class="mb-3">
+            <label class="form-label">조회수</label>
+            <input class="form-control" value="<%= row.hit %>" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">이름</label>
+            <input class="form-control" name="writer" value="<%= row.writer %>" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">제목</label>
+            <input name="title" class="form-control" value="<%= row.title %>" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">날짜</label>
+            <input class="form-control" value="<%= row.post_date %>" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">내용</label>
+            <textarea name="contents" class="form-control" rows="5"><%= row.contents %></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">첨부파일</label>
+            <br />
+            <% if (row.filesize > 0) { %>
+                <a href="/download/<%= row.idx %>"><%= row.filename %></a>
+                (<%= row.filesize %> bytes)
+                <br />
+            <% } %>
+            <input type="file" name="file" class="form-control mt-2" />
+            <input type="hidden" name="old_filename" value="<%= row.filename %>" />
+        </div>
+
+        <div class="text-center">
+            <button type="button" onclick="home()" class="btn btn-secondary">목록</button>
+            <button type="submit" class="btn btn-primary">수정</button>
+            <button type="button" onclick="del('<%= row.idx %>')" class="btn btn-danger">삭제</button>
+        </div>
+    </form>
+
+    <hr class="my-5" />
+
+    <h4>댓글 작성</h4>
+    <form method="post" action="/reply_insert" class="mb-4">
+        <div class="mb-2">
+            <input name="writer" class="form-control" placeholder="이름" />
+        </div>
+        <div class="mb-2">
+            <textarea name="contents" class="form-control" rows="4" placeholder="댓글을 작성하세요"></textarea>
+        </div>
+        <input type="hidden" name="board_idx" value="<%= row.idx %>" />
+        <button type="submit" class="btn btn-outline-primary">댓글쓰기</button>
+    </form>
+
+    <h5>댓글 목록</h5>
+    <div class="list-group">
+        <% for (var i = 0; i < comment_list.length; i++) { var comment = comment_list[i]; %>
+        <div class="list-group-item">
+            <strong><%= comment.writer %></strong>
+            <span class="text-muted">(<%= comment.post_date %>)</span>
+            <p class="mb-0"><%= comment.contents %></p>
+        </div>
+    <% } %>
+    </div>
+</body>
+</html>

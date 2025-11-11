@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>To-Do List</title>
+    <script>
+        function done_todo(idx) {
+            location.href = '/done/' + idx;
+        }
+
+        function delete_todo(idx){
+            if(confirm('삭제하시겠습니까?')){
+                location.href = '/delete/' + idx;
+            }
+        }
+    </script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td, th {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+
+        form {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+    <h1>ToDo List</h1>
+    <form action="/add" method="post">
+        <input type="text" name="title" placeholder="제목" required required />
+        <input type="text" name="description" placeholder="상세내용" required />
+        <select name="priority">
+            <option value="1">높음</option>
+            <option value="2" selected>보통</option>
+            <option value="3">낮음</option>
+        </select>
+        <input type="date" name="target_date" required />
+        <button type="submit">추가</button>
+    </form>
+
+    <table>
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>우선순위</th>
+            <th>등록일</th>
+            <th>마감일</th>
+            <th>완료여부</th>
+            <th>&nbsp;</th>
+        </tr>
+        <% items.forEach(todo => { %>
+            <tr>
+                <td><%= todo.idx %></td>
+                <td><a href="/detail/<%= todo.idx %>"><%= todo.title %></a></td>
+                <td><%= ['높음', '보통', '낮음'][todo.priority-1] %></td>
+                <td><%= todo.reg_date %></td>
+                <td><%= todo.target_date %></td>
+                <td><%= todo.done ? '완료' : '진행중' %></td>
+                <td>
+                    <% if (!todo.done) { %>
+                        <button type="button" onclick="done_todo('<%= todo.idx %>')">완료</button>
+                    <% } %>
+                    <button type="button" onclick="delete_todo('<%= todo.idx %>')">삭제</button>
+                </td>
+            </tr>
+       <% }) %>
+    </table>
+</body>
+</html>

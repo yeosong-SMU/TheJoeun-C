@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;com.example.schedule.UserRepo&apos; to &apos;UsersRepo&apos;&#x0D;&#x0A;- Original project: &apos;schedule&apos;&#x0D;&#x0A;- Original element: &apos;com.example.schedule.UserRepo&apos;&#x0D;&#x0A;- Renamed element: &apos;com.example.schedule.UsersRepo&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;UserRepo&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src\/main\/java=/gradle_scope=/main=/=/gradle_used_by_scope=/main,test=/&lt;com.example.schedule{UserRepo.java[UserRepo" matchStrategy="1" name="UsersRepo" qualified="false" references="true" similarDeclarations="false" stamp="1758087840877" textual="false" version="1.0"/>
+</session>

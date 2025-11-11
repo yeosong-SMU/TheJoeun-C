@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Book List</title>
+</head>
+<body>
+    <h1>Book List</h1>
+    <a href="/new">Add</a>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Price</th>
+            <th>Date</th>
+        </tr>
+        <% books.forEach(book => { %>
+        <tr>
+            <td><%= book.ID %></td>
+            <td><a href="/edit/<%= book.ID %>"><%= book.TITLE %></a></td>
+            <td><%= book.AUTHOR %></td>
+            <td><%= book.PRICE %></td>
+            <td><%= book.PUBLISHED_DATE ? new Date(book.PUBLISHED_DATE).toLocaleDateString('ko-KR') : '' %></td>
+        </tr>
+    <% }) %>
+    </table>
+</body>
+</html>

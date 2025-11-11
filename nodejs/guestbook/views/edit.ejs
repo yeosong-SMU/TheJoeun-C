@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        function delete_guestbook(idx){
+            if(confirm("삭제하시겠습니까?")){
+                location.href = "/delete/" + idx;
+            }
+        }
+    </script>
+</head>
+<body>
+    <form action="/update/<%= item.idx %>" method="post">
+        <input type="text" name="name" value="<%= item.name %>" placeholder="name" autofocus><br>
+        <input type="text" name="email" value="<%= item.email %>" placeholder="email"><br>
+        <input type="password" name="passwd" value="<%= item.passwd %>" placeholder="password"><br>
+        <textarea name="contents" rows="5" cols="80" placeholder="contents"><%= item.contents%></textarea><br>
+        <button type="submit">저장</button>
+        <button type="button" onclick="delete_guestbook('<%= item.idx %>')">삭제</button>
+        <button type="button" onclick="location.href='/'">목록</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function delete_memo(idx) {
+            if(confirm("삭제하시겠습니까?")) {
+                location.href = "/delete/" + idx;
+            }
+        }
+    </script>
+</head>
+<body>
+    <form action="/update/<%= item.idx %>" method="post">
+        <input type="text" name="writer" size="10" value="<%= item.writer %>" placeholder="writer" autofocus ><br>
+        <input type="text" name="memo" value="<%= item.memo%>" placeholder="memo"><br>
+        <button type="submit">저장</button>
+        <button type="button" onclick="delete_memo('<%= item.idx %>')">삭제</button>
+        <button type="button" onclick="location.href='/">목록</button>
+    </form>
+</body>
+</html>

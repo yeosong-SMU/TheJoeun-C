@@ -1,0 +1,63 @@
+package com.example.sweethome.ssong;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.sweethome.kakao.KakaoService;
+import com.example.sweethome.kakao.dto.KakaoProfile;
+import com.example.sweethome.user.User;
+import com.example.sweethome.user.UserRepository;
+
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/api/kakao")
+@RequiredArgsConstructor
+public class KaKaoApiController {
+	private final KakaoService kakaoService;
+    private final UserRepository userRepo;
+
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> kakaoLogin(
+            @RequestBody Map<String, String> req,
+            HttpSession session) {
+        Map<String, Object> res = new HashMap<>();
+        try {
+            String accessToken = req.get("accessToken");
+
+            // 카카오 토큰으로 유저 정보 가져오기
+            KakaoProfile userInfo = kakaoService.getUserInfo(accessToken);
+            String email = userInfo.getKakaoAccount().getEmail();
+
+            Optional<User> userOpt = userRepo.findByEmail(email);
+
+            if (userOpt.isEmpty()) {
+            	res.put("success", false);
+            	res.put("message", "회원가입 후 이용해 주세요.");
+            	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
+            }
+            
+            // 세션에 저장
+            User user = userOpt.get();
+            session.setAttribute("userProfile", user);
+
+            res.put("success", true);
+            res.put("userProfile", user);
+            return ResponseEntity.ok(res);
+
+        } catch (Exception e) {
+            res.put("success", false);
+            res.put("message", "카카오 로그인 실패: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+        }
+    }
+}

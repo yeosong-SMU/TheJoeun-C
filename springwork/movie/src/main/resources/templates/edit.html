@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>영화 수정</title>
+<style>
+.modal {
+display: none;
+position: fixed;
+top: 50%; left: 50%;
+transform: translate(-50%, -50%);
+background-color: white;
+border: 1px solid black;
+padding: 20px;
+z-index: 1000;
+}
+
+.modal-content {
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+}
+
+textarea {
+width: 100%;
+height: 100px;
+}
+
+button {
+margin: 5px 0;
+}
+</style>
+</head>
+<body>
+<h1>영화 수정</h1>
+<form action="/movies/edit" method="post">
+	제목: <input type="text" id="title" name="title" th:value="${movie.title}" required><br>
+	감독: <input type="text" id="director" name="director" th:value="${movie.director}" required><br>
+	개봉 연도: <input type="number" id="releaseYear" name="releaseYear" th:value="${movie.releaseYear}" required><br>
+	장르: <input type="text" id="genre" name="genre" th:value="${movie.genre}" required><br>
+	평점: <input type="number" id="rating" name="rating" min="1" max="10" th:value="${movie.rating}" required><br>
+	
+	<input type="hidden" name="id" th:value="${movie.id}">
+	<button type="submit">영화 수정</button>
+	<button type="submit" onclick="this.form.action='/movies/delete';return confirm('정말 삭제하시겠습니까?');">영화 삭제</button>
+	<button type="button" onclick="location.href='/movies'">목록</button>
+</form>
+
+<h2>리뷰 추가</h2>
+<form th:action="@{/movies/review/{id}(id=${movie.id})}" method="post">
+	이름: <input type="text" id="reviewerName" name="reviewer" placeholder="이름을 입력하세요" required><br>
+	<textarea id="reviewContent" name="content" placeholder="리뷰를 입력하세요" required></textarea><br>
+	<input type="number" id="reviewRating" name="rating" min="1" max="10" placeholder="평점" required><br>
+	<button type="submit">리뷰 추가</button>
+</form>
+
+<div th:if="${#lists.isEmpty(movie.reviews)}">
+	<p>등록된 리뷰가 없습니다.</p>
+</div>
+
+<div th:unless="${#lists.isEmpty(movie.reviews)}">
+	<h2>리뷰 목록</h2>
+	<table border="1">
+		<thead>
+			<tr>
+				<th>작성자</th>
+				<th>리뷰 내용</th>
+				<th>평점</th>
+				<th>수정/삭제</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="review : ${movie.reviews}">
+				<tr>
+					<td th:text="${review.reviewer}"></td>
+					<td th:text="${review.content}"></td>
+					<td th:text="${review.rating}"></td>
+					<td>
+						<button type="button" th:onclick="'openModal(' + ${review.id} + ')'">수정/삭제</button>
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+</div>
+<div id="reviewModal" class="modal" style="display: none;">
+	<div class="modal-content">
+		<h3>리뷰 수정/삭제</h3>
+		<form th:action="@{/movies/review/update}" method="post">
+			<input type="hidden" id="reviewId" name="reviewId"> <input type="text" id="editReviewer" name="reviewer">
+			<textarea id="editReviewContent" name="content"></textarea><br>
+			<input type="number" id="editReviewRating" name="rating" min="1" max="10"><br>
+			<button type="submit">수정</button>
+			<button type="button" onclick="deleteReview()">삭제</button>
+			<button type="button" onclick="closeModal()">닫기</button>
+		</form>
+	</div>
+</div>
+
+<script>
+function openModal(reviewId) {
+	document.getElementById("reviewId").value = reviewId;
+	fetch('/movies/review/' + reviewId)
+	.then(response => response.json())
+	.then(data => {
+		console.log(JSON.stringify(data));
+		document.getElementById("editReviewer").value=data.reviewer;
+		document.getElementById("editReviewContent").value = data.content;
+		document.getElementById("editReviewRating").value = data.rating;
+		document.getElementById("reviewModal").style.display = "block";
+	});
+}
+
+function closeModal() {
+	document.getElementById("reviewModal").style.display = "none";
+}
+
+function deleteReview() {
+	const reviewId = document.getElementById("reviewId").value;
+	if(confirm("정말 삭제하시겠습니까?")) {
+		fetch('/movies/review/delete' + reviewId, {method: 'DELETE'})
+		.then(() => {
+			closeModal();
+			location.reload();
+		})
+		.catch(error => {
+			console.error("리뷰 삭제 오류: ", error);
+		});
+	}
+}
+</script>
+</body>
+</html>

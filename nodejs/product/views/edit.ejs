@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script>
+        function delete_product(product_code) {
+            if(confirm("삭제하시겠습니까?")) {
+                location.href = "/delete/" + product_code;
+            }
+        }
+    </script>
+</head>
+<body>
+    <form action="/update/<%= item.product_code %>" method="post" enctype="multipart/form-data">
+        <input type="text" name="product_name" value="<%= item.product_name%>" placeholder="product_name" autofocus><br>
+        <input type="text" name="description" value="<%= item.description%>" placeholder="description"><br>
+        <input type="text" name="price" value="<%= item.price%>" placeholder="price"><br>
+        
+        <% if(item.filename != '-' ) { %>
+            <img src="/images/<%= item.filename %>" width="100px" height="100px"><br>
+        <% } %>
+
+        <input type="file" name="filename"><br>
+        <input type="hidden" name="old_filename" value="<%= item.filename%>"><br>
+        <button type="submit">확인</button>
+        <button type="button" onclick="delete_product('<%= item.product_code %>')">삭제</button>
+        <button type="button" onclick="location.href='/'">목록</button>
+    </form>
+</body>
+</html>

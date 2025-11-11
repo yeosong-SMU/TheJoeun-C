@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta charset="UTF-8">
+<title>로그인</title>
+</head>
+<body>
+<h1>로그인</h1>
+<p th:if="${error != null}" th:text="${error}" style="color: red"></p>
+
+<h2>csrf 폼</h2>
+<form th:action="@{/login}" method="post">
+	<input type="text" name="userid" placeholder="아이디"><br>
+	<input type="password" name="pwd" placeholder="비밀번호"><br>
+	<input type="hidden" name="_csrf" th:value="${_csrf}">
+	<button type="submit">로그인</button>
+</form>
+
+<h2>csrf 없는 폼</h2>
+<form th:action="@{/login}" method="post">
+	<input type="text" name="userid" placeholder="아이디"><br>
+	<input type="password" name="pwd" placeholder="비밀번호"><br>
+	<button type="submit">로그인</button>
+</form>
+
+<p>
+	<a th:href="@{/}">홈으로</a>
+</p>
+</body>
+</html>

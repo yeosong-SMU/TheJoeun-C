@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move element &apos;admin.xml&apos; to &apos;spring_product/src/main/resources/mappers&apos;&#x0D;&#x0A;- Original project: &apos;spring_product&apos;&#x0D;&#x0A;- Destination element: &apos;spring_product/src/main/resources/mappers&apos;&#x0D;&#x0A;- Original element: &apos;admin.xml&apos;&#x0D;&#x0A;- Update references to refactored element" description="Move file" destination="/src\/main\/resources=/gradle_scope=/main=/=/gradle_used_by_scope=/main,test=/&lt;mappers" element1="src/main/resources/mappers/member/admin.xml" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1750669713301" units="0" version="1.0"/>
+</session>

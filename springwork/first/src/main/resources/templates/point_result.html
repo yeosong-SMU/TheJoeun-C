@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:replace="~{include/menu :: menu}"></div>
+	
+	이름: <span th:text="${dto.name}">[이름]</span><br>
+	국어: <span th:text="${dto.kor}">[국어]</span><br>
+	영어: <span th:text="${dto.eng}">[영어]</span><br>
+	수학: <span th:text="${dto.mat}">[수학]</span><br>
+	총점: <span th:text="${dto.total}">[총점]</span><br>
+	평균: <span th:text="${dto.average}">[평균]</span><br>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.address.AddressDAO">
+	<select id="list" resultType="com.example.address.AddressDTO">
+		select * from address order by name
+	</select>
+	
+	<insert id="insert" parameterType="com.example.address.AddressDTO">
+		insert into address (name, address, phone)
+		values (#{name}, #{address}, #{phone})
+	</insert>
+	
+	<select id="detail" parameterType="int" resultType="com.example.address.AddressDTO">
+		select * from address where idx = #{idx}
+	</select>
+	
+	<update id="update" parameterType="com.example.address.AddressDTO">
+		update address
+		set name=#{name}, address=#{address}, phone=#{phone}
+		where idx = #{idx}
+	</update>
+	
+	<delete id="delete">
+		delete from address where idx=#{idx}
+	</delete>
+</mapper>

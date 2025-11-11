@@ -1,0 +1,14 @@
+name: vocab_app
+description: "Vocab app split into 5 files"
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.3.2
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/words.json

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>회원 검색 결과</title>
+</head>
+<body>
+<h1>회원 검색 결과</h1>
+
+<div th:if="${#lists.isEmpty(results)}">
+	<p>검색 결과가 없습니다.</p>
+</div>
+
+<div th:if="${!#lists.isEmpty(results)}">
+	<h3>[[${mode}]] 모드 결과</h3>
+	<table border="1">
+		<tr>
+			<th>이메일</th>
+			<th>이름</th>
+		</tr>
+		<tr th:each="m : ${results}">
+			<td th:text="${m.email}"></td>
+			<td th:text="${m.name}"></td>
+		</tr>
+	</table>
+</div>
+</body>
+</html>

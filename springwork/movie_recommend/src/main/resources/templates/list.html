@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>영화 목록</title>
+</head>
+<body>
+<h2>영화 목록</h2>
+<button type="button" onclick="location.href='/upload'">CSV 업로드</button>
+<table border="1">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>제목</th>
+			<th>장르</th>
+			<th>관람등급</th>
+			<th>수정</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="movie : ${movies}">
+			<td th:text="${movie.movieId}"></td>
+			<td th:text="${movie.title}"></td>
+			<td th:text="${movie.genre}"></td>
+			<td th:text="${movie.ratingAge}"></td>
+			<td>
+				<form th:action="@{/edit/{id}(id=${movie.movieId})}">
+					<button type="submit">수정</button>
+				</form>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</body>
+</html>

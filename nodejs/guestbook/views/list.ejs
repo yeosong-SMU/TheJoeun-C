@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        function delete_address(idx){
+            if(confirm('삭제하시겠습니까?')){
+                location.href = '/delete/' + idx;
+            }
+        }
+    </script>
+</head>
+<% if(message === 'error' ){ %>
+<script>
+    alert('비밀번호를 확인하세요.');
+</script>
+<% } %>
+
+<body>
+    <h2>방명록</h2>
+    <button type="button" onclick="location.href='/form'">추가</button>
+
+    <% for(var i=0; i<items.length; i++) { item = items[i]; %>
+    <form action="/passwd_check" method="post">
+        <table border="1">
+            <tr>
+                <td style="text-align: center; background-color: cyan; width: 20%;">이름</td>
+                <td style="text-align: center; width: 30%;"><%= item.name %></td>
+                <td style="text-align: center; background-color: cyan; width: 20%;">날짜</td>
+                <td style="text-align: center; width: 30%;"><%= item.post_date %></td>
+            </tr>
+            <tr>
+                <td style="text-align: center; background-color: cyan;">이메일</td>
+                <td colspan="3"><%= item.email %></td>
+            </tr>
+            <tr>
+                <td colspan="4"><%= item.contents %></td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    비밀번호
+                    <input type="hidden" name="idx" value="<%= item.idx %>" />
+                    <input type="password" name="passwd" />
+                    <input type="submit" value="수정/삭제" />
+                </td>
+            </tr>
+        </table>
+    </form>
+    <% } %>
+</body>
+</html>

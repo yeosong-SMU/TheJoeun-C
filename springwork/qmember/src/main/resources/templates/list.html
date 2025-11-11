@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Member 목록</title>
+</head>
+<body>
+<h2>Member 목록</h2>
+
+<form th:action="@{/members}" method="get" th:object="${cond}">
+	<input type="text" th:field="*{keyword}" placeholder="아이디/이메일" />
+	<select th:field="*{role}">
+		<option value="">전체</option>
+		<option value="USER">USER</option>
+		<option value="ADMIN">ADMIN</option>
+	</select>
+	<button type="submit">검색</button>
+	<input type="hidden" th:field="*{sort}" />
+	<input type="hidden" th:field="*{dir}" />
+</form>
+
+<table border="1">
+<thead>
+	<tr>
+		<th>
+			<a th:href="@{/members(sort='id', 
+			dir=${cond.dir == 'asc' ? 'desc' : 'asc'}, 
+			keyword=${cond.keyword}, 
+			role=${cond.role}, page=${cond.page})}">
+				ID
+			</a>
+		</th>
+		<th>
+			<a th:href="@{/members(sort='username', 
+			dir=${cond.dir == 'asc' ? 'desc' : 'asc'}, 
+			keyword=${cond.keyword}, 
+			role=${cond.role}, page=${cond.page})}">
+				Username
+			</a>
+		</th>
+		<th>Email</th>
+		<th>Role</th>
+		<th>Enabled</th>
+		<th>
+			<a th:href="@{/members(sort='createdAt', 
+			dir=${cond.dir == 'asc' ? 'desc' : 'asc'}, 
+			keyword=${cond.keyword}, 
+			role=${cond.role}, page=${cond.page})}">
+				CreatedAt
+			</a>
+		</th>
+	</tr>
+</thead>
+<tbody>
+	<tr th:each="m : ${members}">
+		<td th:text="${m.id}">1</td>
+		<td th:text="${m.username}">hong</td>
+		<td th:text="${m.email}">hong@example.com</td>
+		<td th:text="${m.role}">USER</td>
+		<td th:text="${m.enabled}">true</td>
+		<td th:text="${#temporals.format(m.createdAt, 'yyyy-MM-dd HH:mm')}">2025-08-26</td>
+	</tr>
+	<tr th:if="${#lists.isEmpty(members)}">
+		<td colspan="6">검색 결과 없음</td>
+	</tr>
+</tbody>
+</table>
+
+<div th:if="${page.totalPages > 1}">
+	<a th:if="${!page.first}" 
+	th:href="@{/members(page=${page.number-1}, 
+	size=${page.size}, keyword=${cond.keyword}, 
+	role=${cond.role}, sort=${cond.sort}, 
+	dir=${cond.dir})}">이전</a>
+	<span th:text="${page.number+1} + '/' + ${page.totalPages}">1/1</span>
+	<a th:if="${!page.last}" 
+	th:href="@{/members(page=${page.number+1}, 
+	size=${page.size}, keyword=${cond.keyword}, 
+	role=${cond.role}, sort=${cond.sort}, 
+	dir=${cond.dir})}">다음</a>
+</div>
+</body>
+</html>

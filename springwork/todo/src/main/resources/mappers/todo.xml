@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="todo">
+	<select id="list" resultType="com.example.todo.TodoDTO">
+		select idx, title, description, priority, done, reg_date, to_char(target_date, 'yyyy-MM-dd') target_date
+		from todo
+		where title like #{title}
+		order by priority, idx desc
+	</select>
+	
+	<select id="count" resultType="int">
+		select count(*) from todo
+	</select>
+	
+	<insert id="insert">
+		insert into todo (idx, title, description, done, priority, reg_date, target_date)
+		values (todo_seq.nextval, #{title}, #{description}, 0, #{priority}, sysdate, #{target_date})
+	</insert>
+	
+	<select id="detail" resultType="com.example.todo.TodoDTO">
+		select idx, title, description, priority, done, reg_date, to_char(target_date, 'yyyy-MM-dd') target_date
+		from todo
+		where idx=#{idx}
+	</select>
+	
+	<update id="update">
+		update todo
+		set title=#{title}, description=#{description}, done=#{done}, priority=#{priority}, target_date=#{target_date}
+		where idx=#{idx}
+	</update>
+	
+	<update id="change_status">
+		update todo set done=#{done} where idx=#{idx}
+	</update>
+	
+	<delete id="delete">
+		delete from todo where idx=#{idx}
+	</delete>
+</mapper>

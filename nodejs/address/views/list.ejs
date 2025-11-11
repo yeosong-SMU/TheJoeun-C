@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function delete_address(idx){
+            if(confirm("삭제하시겠습니까?")){
+                location.href = "/delete/" + idx;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>주소록</h2>
+    <button type="button" onclick="location.href='/form'">추가</button>
+    <table border="1">
+        <tr>
+            <td>No</td>
+            <td>이름</td>
+            <td>주소</td>
+            <td>전화</td>
+        </tr>
+        <% for(let i=0; i < items.length; i++) { item = items[i]; %>
+        <tr>
+            <td><%= (i + 1) %></td>
+            <td>
+                <a href="/detail/<%=item.idx %>">
+                    <%= item.name %>
+                </a>
+            </td>
+            <td><%= item.address %></td>
+            <td><%= item.phone %></td>
+        </tr>
+    <% } %>
+    </table>
+</body>
+</html>

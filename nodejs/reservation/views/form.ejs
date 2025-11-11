@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title><%= title %></title>
+</head>
+<body>
+    <h2><%= title %></h2>
+    <form method="POST" action="<%= reservation._id ? '/update/' + reservation._id : '/' %>">
+        이름: 
+        <input name="name" value="<%= reservation.name || '' %>" required />
+        <br />
+        날짜: 
+        <input type="date" name="date" value="<%= reservation.date ? reservation.date.toISOString().substring(0, 10) : '' %>" required />
+        <br />
+        시간: 
+        <input type="time" name="time" value="<%= reservation.time || '' %>" required />
+        <br />
+        서비스: 
+        <input name="service" value="<%= reservation.service || '' %>" required />
+        <br />
+        <button type="submit"><%= reservation._id ? '수정' : '예약' %></button>
+        <button type="button" onclick="location.href='/'">목록</button>
+    </form>
+</body>
+</html>

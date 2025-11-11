@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(function() {
+	$("#btnUpdate").click(function() {
+		document.form1.action="update.do";
+		document.form1.submit();
+	});
+	$("#btnDelete").click(function() {
+		if(confirm("삭제하시겠습니까?")) {
+			document.form1.action = "delete.do";
+			document.form1.submit();
+		}
+	});
+});
+</script>
+</head>
+<body>
+<form name="form1" method="post">
+	<table border="1" width="600px">
+		<tr>
+			<td>이름</td>
+			<td><input name="name" th:value="${dto.name}"></td>
+		</tr>
+		<tr>
+			<td>이메일</td>
+			<td><input name="email" th:value="${dto.email}"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<textarea rows="5" cols="60" name="content"
+				th:inline="text">[[${dto.content}]]</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center">
+				<input type="hidden" name="idx" th:value="${dto.idx}">
+				<input type="button" value="수정" id="btnUpdate">
+				<input type="button" value="삭제" id="btnDelete">
+				<input type="button" value="목록" onclick="location.href='list.do'">
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

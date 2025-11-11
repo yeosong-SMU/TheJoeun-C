@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title><%= book ? 'Edit' : 'New' %> Book</title>
+    <script>
+        function delete_book(id) {
+            if(confirm('삭제하시겠습니까?')) {
+                location.href = '/delete/' + id;
+            }
+        }
+        function check() {
+            if(document.form1.title.value == '') {
+                alert('제목을 입력하세요.');
+                document.form1.title.focus();
+                return;
+            }
+            if(document.form1.author.value == '') {
+                alert('저자를 입력하세요.');
+                document.form1.author.focus();
+                return;
+            }
+            if(document.form1.price.value == ''){
+                alert("가격을 입력하세요.");
+                document.form1.price.focus();
+                return;
+            }
+            if(document.form1.published_date.value == ''){
+                alert("출판일자를 입력하세요.");
+                document.form1.published_date.focus();
+                return;
+            }
+            document.form1.submit();
+        }
+    </script>
+</head>
+<body>
+    <h1><%= book ? 'Edit' : 'New' %> Book</h1>
+    <form name="form1" method="post" action="<%= book ? '/' + book.ID : '/' %>">
+        Title:
+        <input type="text" name="title" value="<%= book ? book.TITLE : '' %>" required />
+        <br />
+        Author:
+        <input type="text" name="author" value="<%= book ? book.AUTHOR : '' %>" required />
+        <br />
+        Price:
+        <input type="number" name="price" value="<%= book ? book.PRICE : '' %>" required />
+        <br />
+        Date:
+        <input type="date" name="published_date" value="<%= book ? book.PUBLISHED_DATE.toISOString().substring(0, 10) : '' %>" />
+        <br />
+        <button type="button" onclick="check()">Save</button>
+        <% if (book && book.ID) { %>
+        <button type="button" onclick="delete_book('<%= book.ID %>')">Delete</button>
+        <% } %>
+        <a href="/">List</a>
+    </form>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>고객 분류 목록</title>
+</head>
+<body>
+<h2>고객 분류 목록</h2>
+
+<h3>CSV 업로드</h3>
+<form th:action="@{/upload}" method="post" enctype="multipart/form-data">
+	<input type="file" name="file" accept=".csv" required>
+	<button type="submit">업로드</button>
+	<button type="button" onclick="location.href='/charts'">시각화</button>
+</form>
+<div th:if="${msg}" th:text="${msg}"></div>
+
+<h3>결과 목록</h3>
+<table border="1">
+<thead>
+	<tr>
+		<th>ID</th>
+		<th>customer_id</th>
+		<th>age</th>
+		<th>income</th>
+		<th>spend</th>
+		<th>cluster</th>
+	</tr>
+</thead>
+<tbody>
+	<tr th:each="c : ${customers}">
+		<td th:text="${c.id}"></td>
+		<td th:text="${c.customerId}"></td>
+		<td th:text="${c.age}"></td>
+		<td th:text="${c.income}"></td>
+		<td th:text="${c.spend}"></td>
+		<td th:text="${c.clusterLabel}"></td>
+	</tr>
+</tbody>
+</table>
+</body>
+</html>

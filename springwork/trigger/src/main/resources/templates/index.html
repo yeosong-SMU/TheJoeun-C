@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>회원 실습</title>
+</head>
+<body>
+<h2>회원 실습</h2>
+<form th:action="@{/signup}" method="post">
+	ID: <input type="text" name="username" required maxlength="50"><br>
+	PW: <input type="password" name="password" required maxlength="200"><br>
+	<button type="submit">가입</button>
+</form>
+
+<hr>
+
+<h2>회원 목록</h2>
+<table border="1" cellpadding="1">
+<thead>
+	<tr>
+		<th>ID</th>
+		<th>Username</th>
+		<th>Status</th>
+		<th>CreatedAt</th>
+		<th>DeletedAt</th>
+		<th>탈퇴</th>
+	</tr>
+</thead>
+<tbody>
+	<tr th:each="m : ${members}">
+		<td th:text="${m.id}"></td>
+		<td th:text="${m.username}"></td>
+		<td th:text="${m.status}"></td>
+		<td th:text="${m.createdAt}"></td>
+		<td th:text="${m.deletedAt}"></td>
+		<td>
+			<form th:action="@{|/withdraw/${m.id}|}" 
+			method="post"
+			th:if="${m.status}=='ACTIVE'">
+				<button type="submit">탈퇴</button>
+			</form>
+			<span th:if="${m.status}=='INACTIVE'">탈퇴완료</span>
+		</td>
+	</tr>
+</tbody>
+</table>
+</body>
+</html>

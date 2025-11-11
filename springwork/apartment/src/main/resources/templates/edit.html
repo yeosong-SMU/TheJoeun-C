@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>아파트 수정</title>
+</head>
+<body>
+	<h2>아파트 수정</h2>
+	
+	<form th:action="@{/edit}" th:object="${apartment}" method="post">
+		<input type="hidden" th:field="*{id}">
+		
+		<table>
+			<tr>
+				<td>주소</td>
+				<td><input type="text" th:field="*{address}" required></td>
+			</tr>
+			<tr>
+				<td>전용면적</td>
+				<td><input type="number" step="0.01" th:field="*{area}" required></td>
+			</tr>
+			<tr>
+				<td>층수</td>
+				<td><input type="number" th:field="*{floor}" required></td>
+			</tr>
+			<tr>
+				<td>방 개수</td>
+				<td><input type="number" th:field="*{rooms}" required></td>
+			</tr>
+			<tr>
+				<td>건축 연도</td>
+				<td><input type="number" th:field="*{builtYear}" required></td>
+			</tr>
+			<tr>
+				<td>실제 시세 (만원)</td>
+				<td><input type="number" th:field="*{price}"></td>
+			</tr>
+			<tr valign="top">
+				<td>DB에 저장된 예측가</td>
+				<td>
+					<input type="number" th:value="${apartment.predictedPrice}" readonly>
+					<br> <span th:if="${apartment.predictedPrice != null and latestPredicted != null}"> 오차: <span th:text="${T(java.lang.Math).abs(apartment.price - latestPredicted)} + ' (만원)'"></span></span>
+				</td>
+			</tr>
+		</table>
+		
+		<button type="submit">수정</button>
+		<button type="submit" onclick="this.form.action='/delete'; return confirm('정말 삭제하시겠습니까?')">삭제</button>
+		<button type="button" onclick="location.href='/'">목록으로</button>
+	</form>
+</body>
+</html>

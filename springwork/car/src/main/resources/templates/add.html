@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>차량 등록</title>
+<script>
+function priceIfReady() {
+	const model = document.getElementById('model').value;
+	const year = document.getElementById('year').value;
+	const mileage = document.getElementById('mileage').value;
+	
+	const fuelInput = document.querySelector('input[name="fuel"]:checked');
+	const transmissionInput = document.querySelector('input[name="transmission"]:checked');
+	
+	const fuel = fuelInput ? fuelInput.value : '';
+	const transmission = transmissionInput ? transmissionInput.value : '';
+	
+	if (model && year && mileage && fuel && transmission) {
+		const data = {
+				model: model,
+				year: parseInt(year), 
+				mileage: parseInt(mileage), 
+				fuel: fuel, 
+				transmission: transmission
+		};
+		
+		fetch("http://localhost:5000/predict", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" }, 
+			body: JSON.stringify(data)
+		})
+		.then(res => res.json())
+		.then(result => {
+			if(result.predicted_price !== undefined) {
+				document.getElementById("price").value = result.predicted_price;
+			}
+		});
+	}
+}
+</script>
+</head>
+<body>
+<h2>차량 등록</h2>
+
+<form th:action="@{/cars/add}" method="post">
+	<div>
+		모델: <select id="model" name="model" onchange="priceIfReady()">
+			<option value="">-- 모델 선택 --</option>
+			<option value="Avante">Avante</option>
+			<option value="Sonata">Sonata</option>
+			<option value="K5">K5</option>
+			<option value="SM6">SM6</option>
+			<option value="Tivoli">Tivoli</option>
+			<option value="Grandeur">Grandeur</option>
+			<option value="Spark">Spark</option>
+			<option value="K3">K3</option>
+		</select>
+	</div>
+	<div>
+		연식: <input type="number" id="year" name="year" onblur="priceIfReady()" />
+	</div>
+	<div>
+		주행거리: <input type="number" id="mileage" name="mileage" onblur="priceIfReady()" />
+	</div>
+	<div>
+		연료: <input type="radio" name="fuel" value="휘발유" onblur="priceIfReady()" /> 휘발유
+		<input type="radio" name="fuel" value="경유" onblur="priceIfReady()" /> 경유
+		<input type="radio" name="fuel" value="LPG" onblur="priceIfReady()" /> LPG
+		<input type="radio" name="fuel" value="전기" onblur="priceIfReady()" /> 전기
+	</div>
+	<div>
+		변속기: <input type="radio" name="transmission" value="오토" onblur="priceIfReady()" /> 오토
+		<input type="radio" name="transmission" value="수동" onblur="priceIfReady()" /> 수동
+	</div>
+	<div>
+		가격(단위: 만원): <input type="text" id="price" name="price" onblur="priceIfReady()" />
+	</div>
+	
+	<button type="submit">등록</button>
+</form>
+</body>
+</html>

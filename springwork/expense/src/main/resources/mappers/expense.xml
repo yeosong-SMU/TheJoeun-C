@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.expense.ExpenseDAO">
+	<select id="list" resultType="com.example.expense.ExpenseDTO">
+		select idx, to_char(reg_date, 'yyyy-mm-dd') reg_date, category, description, amount
+		from expense order by reg_date desc
+	</select>
+	
+	<insert id="insert">
+		insert into expense (reg_date, category, description, amount)
+		values (#{reg_date}, #{category}, #{description}, #{amount})
+	</insert>
+	
+	<select id="detail" resultType="com.example.expense.ExpenseDTO">
+		select idx, to_char(reg_date, 'yyyy-mm-dd') reg_date, category, description, amount
+		from expense
+		where idx = #{idx}
+	</select>
+	
+	<update id="update">
+		update expense
+		set reg_date=#{reg_date}, category=#{category}, description=#{description}, amount=#{amount}
+		where idx=#{idx}
+	</update>
+	
+	<delete id="delete">
+		delete from expense where idx=#{idx}
+	</delete>
+</mapper>

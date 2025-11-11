@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.guestbook.GuestbookDAO">
+	<select id="list" resultType="com.example.guestbook.GuestbookDTO">
+		select * from guestbook order by idx desc
+	</select>
+	
+	<insert id="insert">
+		insert into guestbook (idx, name, email, content)
+		values (guestbook_seq.nextval, #{name}, #{email}, #{content})
+	</insert>
+	
+	<select id="view" resultType="com.example.guestbook.GuestbookDTO">
+		select * from guestbook where idx = #{idx}
+	</select>
+	
+	<update id="update">
+		update guestbook
+		set name=#{name}, email=#{email}, content=#{content}
+		where idx=#{idx}
+	</update>
+	
+	<delete id="delete">
+		delete from guestbook where idx=#{idx}
+	</delete>
+</mapper>

@@ -1,0 +1,18 @@
+<h2>로그인</h2>
+<form method="post">
+    <input name="userid" placeholder="아이디" required />
+    <br />
+    <input name="pwd" type="password" placeholder="비밀번호" required />
+    <br />
+    <button type="submit">로그인</button>
+    <button type="button" onclick="location.href='/member/register'">회원가입</button>
+</form>
+<% if (typeof msg !== 'undefined' && msg === 'success') { %>
+    <span style="color: red">회원가입 완료</span>
+<% }else if (typeof msg !== 'undefined' && msg === 'fail') { %>
+    <span style="color: red">로그인 실패</span>
+<% }else if (typeof msg !== 'undefined' && msg === 'logout') { %>
+    <span style="color: red">로그아웃 완료</span>
+<% }else if (typeof msg !== 'undefined' && msg === 'authority') { %>
+    <span style="color: red">접근권한이 없습니다.</span>
+<% } %>

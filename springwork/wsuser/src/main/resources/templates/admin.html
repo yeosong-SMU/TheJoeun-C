@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>관리자 대시보드</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+<h1>관리자 대시보드</h1>
+
+<div id="status">로딩 중...</div>
+
+<h3>실시간 알림</h3>
+<div id="notices"></div>
+
+<h3>접속자 수</h3>
+<p>현재 접속자 수: <apn id="count">0</apn></p>
+
+<h3>현재 접속자 목록</h3>
+<table id="userTable" border="1">
+<thead>
+	<tr>
+		<th>닉네임</th>
+		<th>입장 시각</th>
+		<th>퇴장 시각</th>
+	</tr>
+</thead>
+<tbody id="userTbody"></tbody>
+</table>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+<script>
+let stomp = null;
+
+function ensureNode(id, createFn) {
+	let el = document.getElementById(id);
+	if (!el && typeof createFn === 'function') {
+		el = createFn();
+		document.body.appendChild(el);
+	}
+	return el;
+}
+
+function setStatus(text) {
+	const s = ensureNode('status', () => {
+		const d = document.createElement('div');
+		d.id = 'status';
+		return d;
+	});
+	s.textContent = text;
+}
+
+function appendNoticeLine(at, nickname, type) {
+	const notices = ensureNode('notices', () => {
+		const d = document.createElement('div');
+		d.id = 'notices';
+		return d;
+	});
+	const div = document.createElement('div');
+	div.textContent = `${at} - ${nickname}님이 ${type === 'JOIN' ? '입장하셨습니다.' : '퇴장하셨습니다.'}`;
+	notices.prepend(div);
+	
+	while (notices.children.length > 10)
+		notices.removeChild(notices.lastChild);
+}
+
+function updateCount(n) {
+	const countEl = ensureNode('count', () => {
+		const span = document.createElement('span');
+		span.id = 'count';
+		return span;
+	});
+	countEl.textContent = n;
+}
+
+function renderRows(rows) {
+	const tbody = ensureNode('userTbody', () => {
+		let table = document.getElementById('userTable');
+		if(!table) {
+			table = document.createElement('table');
+			table.id = 'userTable';
+			const thead = document.createElement('thead');
+			thead.innerHTML = '<tr><th>닉네임</th><th>입장 시각</th><th>퇴장 시각</th></tr>';
+			const tb = document.createElement('tbody');
+			tb.id = 'userTbody';
+			table.appendChild(thead);
+			table.appendChild(tb);
+			document.body.appendChild(table);
+		}
+		return document.getElementById('userTbody');
+	});
+	tbody.innerHTML = '';
+	rows.forEach(r => {
+		const tr = document.createElement('tr');
+		tr.setAttribute('data-nick', r.nickname);
+		const td1 = document.createElement('td');
+		td1.textContent = r.nickname;
+		const td2 = document.createElement('td');
+		td2.textContent = r.joinedAt ?? '-';
+		const td3 = document.createElement('td');
+		td3.textContent = r.leftAt ?? '-';
+		tr.append(td1, td2, td3);
+		tbody.appendChild(tr);
+	});
+}
+
+function updateRow(nickname, type, at) {
+	const tbody = document.getElementById('userTbody');
+	if (!tbody) return;
+	let tr = tbody.querySelector(`tr[data-nick="${nickname}"]`);
+	if (!tr) {
+		tr = document.createElement('tr');
+		tr.setAttribute('data-nick', nickname);
+		tr.append(document.createElement('td'), 
+				document.createElement('td'), 
+				document.createElement('td'));
+		tr.children[0].textContent = nickname;
+		tr.children[1].textContent = '-';
+		tr.children[2].textContent = '-';
+		tbody.prepend(tr);
+	}
+	if (type === 'JOIN') tr.children[1].textContent = at;
+	if (type === 'LEAVE') tr.children[2].textContent = at;
+}
+
+async function loadSnapshot() {
+	try {
+		const res = await fetch('/api/presence/snapshot?limit=10');
+		if(!res.ok) {
+			setStatus(`오류: HTTP ${res.status}`);
+			return;
+		}
+		const data = await res.json();
+		if (!data || !data.status) {
+			setStatus('데이터 없음');
+			return;
+		}
+		updateCount(data.status.count ?? 0);
+		
+		const logs = Array.isArray(data.logs) ? data.logs : [];
+		logs.slice().reverse().forEach(l => {
+			appendNoticeLine(l.at, l.nickname, l.type);
+		});
+		
+		renderRows(Array.isArray(data.rows) ? data.rows : []);
+		
+		setStatus('로드 완료');
+	} catch (e) {
+		setStatus('예외: ' + (e?.message || e));
+	}
+}
+
+function connectStomp() {
+	try {
+		const sock = new SockJS('/ws');
+		stomp = Stomp.over(sock);
+		stomp.connect({}, () => {
+			setStatus('연결됨');
+			stomp.subscribe('/topic/online', (msg) => {
+				try {
+					const payload = JSON.parse(msg.body);
+					if (typeof payload.count === 'number') updateCount(payload.count);
+					if (payload.event) {
+						const {type, nickname, at} = payload.event;
+						if (type && nickname && at) {
+							appendNoticeLine(at, nickname, type);
+							updateRow(nickname, type, at);
+						}
+					}
+				} catch (e) {
+					setStatus('메시지 처리 예외: ' + (e?.message || e));
+				}
+			});
+		}, (err) => {
+			setStatus('연결 실패: ' + err);
+		});
+	} catch(e) {
+		setStatus('예외: ' + (e?.message || e));
+	}
+}
+
+window.addEventListener('load', async () => {
+	await loadSnapshot();    //DB 로드
+	connectStomp();          //실시간 구독
+});
+</script>
+</body>
+</html>

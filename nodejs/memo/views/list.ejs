@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function delete_address(idx){
+            if(confirm("삭제하시겠습니까?")){
+                location.href = "/delete/" + idx;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>메모장</h2>
+    <form action="/insert" method="post">
+        <input type="text" name="writer" size="10" placeholder="writer" autofocus />
+        <input type="text" name="memo" placeholder="memo" >
+        <button type="submit">저장</button>
+    </form>
+    <table border="1">
+        <tr>
+            <td>No</td>
+            <td>이름</td>
+            <td>메모</td>
+            <td>날짜</td>
+        </tr>
+        <% for(var i=0; i<items.length; i++) { item=items[i]; %>
+            <tr>
+                <td><%= (i+1) %></td>
+                <td>
+                    <a href="/detail/<%= item.idx %>">
+                        <%= item.writer %>
+                    </a>
+                </td>
+                <td><%= item.memo %></td>
+                <td><%= item.post_date %></td>
+            </tr>
+        <% } %>
+    </table>
+</body>
+</html>

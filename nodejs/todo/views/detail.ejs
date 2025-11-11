@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>할 일 수정</title>
+    <script>
+        function delete_todo(idx) {
+            if(confirm('삭제하시겠습니까?')) {
+                location.href = '/delete/' + idx;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>할 일 상세 / 수정</h1>
+    <form action="/update/<%= todo.idx %>" method="post">
+        제목: <input type="text" name="title" value="<%= todo.title %>" required><br>
+        상세네용: <input type="text" name="description" value="<%= todo.description %>"><br>
+        우선순위: 
+            <select name="priority">
+                <option value="1" <%= todo.priority == 1 ? 'selected' : '' %>>높음</option>
+                <option value="2" <%= todo.priority == 2 ? 'selected' : '' %>>보통</option>
+                <option value="3" <%= todo.priority == 3 ? 'selected' : '' %>>낮음</option>
+            </select>
+        <br>
+        마감일자: <input type="date" name="target_date" value="<%= todo.target_date %>"><br>
+        완료여부:
+            <select name="done">
+                <option value="0" <%= todo.priority == 0 ? 'selected' : '' %>>진행중</option>
+                <option value="1" <%= todo.priority == 1 ? 'selected' : '' %>>완료</option>
+            </select>
+        <br>
+        <button type="submit">수정</button>
+        <button type="button" onclick="delete_todo('<%= todo.idx %>')">삭제</button>
+        <button type="button" onclick="location.href='/';">목록</button>
+    </form>
+</body>
+</html>

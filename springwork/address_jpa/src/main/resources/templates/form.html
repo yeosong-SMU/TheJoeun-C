@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${#strings.isEmpty(address.id) ? '새 주소 추가' : '주소 수정'}">폼</title>
+</head>
+<body>
+	<h1>주소 입력</h1>
+	<form method="post" th:action="@{/save}">
+		<input type="hidden" name="id" th:value="${address.id}">
+		이름: <input type="text" name="name" th:value="${address.name}" required><br>
+		전화: <input type="text" name="phone" th:value="${address.phone}"><br>
+		이메일: <input type="email" name="email" th:value="${address.email}"><br>
+		주소: <input type="text" name="address" th:value="${address.address}"><br>
+		<button type="submit">저장</button>
+		<button type="button" onclick="location.href='/'">목록</button>
+	</form>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>자동차 정보 수정</title>
+<script>
+async function predictPrice() {
+	console.log('called...')
+	const data = {
+		model : document.getElementById('model').value, 
+		year : parseInt(document.getElementById('year').value), 
+		mileage : parseInt(document.getElementById('mileage').value), 
+		fuel : document.getElementById('fuel').value, 
+		transmission: document.getElementById('transmission').value
+	};
+	
+	if(!data.model || isNaN(data.year) || isNaN(data.mileage) || !data.fuel || !data.transmission) {
+		return;  //모든 값이 제대로 입력되지 않으면 예측 안함
+	}
+	
+	try {
+		const response = await fetch("http://localhost:5000/predict", {
+			method : "POST",
+			headers : {
+				"Content-Type" : "application/json"
+			},
+			body : JSON.stringify(data)
+		});
+		const result = await response.json();
+		console.log(result);
+		document.getElementById("predictResult").value = result.predicted_price;
+	} catch (err) {
+		alert("예측에 실패했습니다.");
+	}
+}
+
+window.onload = function() {
+	predictPrice();   //페이지 로드 시 자동 호출
+}
+</script>
+</head>
+<body>
+<h2>자동차 정보 수정</h2>
+<form th:action="@{/cars/edit}" method="post" th:object="${car}">
+	<input type="hidden" th:field="*{id}" />
+	<div>
+		모델: <input id="model" th:field="*{model}" onchange="predictPrice()" />
+	</div>
+	<div>
+		연식: <input id="year" th:field="*{year}" onchange="predictPrice()" />
+	</div>
+	<div>
+		주행거리: <input id="mileage" th:field="*{mileage}" onchange="predictPrice()" />
+	</div>
+	<div>
+		연료: <input id="fuel" th:field="*{fuel}" onchange="predictPrice()" />
+	</div>
+	<div>
+		변속기: <input id="transmission" th:field="*{transmission}" onchange="predictPrice()" />
+	</div>
+	<div>
+		가격: <input id="predictResult" th:field="*{price}" readonly />
+	</div>
+	<div>
+		<button type="submit">수정</button>
+		<button type="submit" formaction="/cars/delete" formmethod="post" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
+		<button type="button" onclick="predictPrice()">추천가격 계산</button>
+	</div>
+</form>
+</body>
+</html>

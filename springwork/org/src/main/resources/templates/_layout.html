@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko" 
+	th:fragment="layout(content)">
+<head>
+<meta charset="UTF-8">
+<title>EMP Org</title>
+</head>
+<body>
+<header class="toolbar">
+	<a th:href="@{/}">홈</a> |
+	<a th:href="@{/org/full}">전체조직</a> |
+	<a th:href="@{/org/subtree}">하위트리</a> |
+	<a th:href="@{/org/chain}">상향체인</a> |
+	<a th:href="@{/org/sum}">급여합계</a> |
+	<a th:href="@{/org/leaves}">리프</a>
+</header>
+
+<div th:insert="${content}">content</div>
+</body>
+</html>

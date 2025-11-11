@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/mylayout}">
+<th:block layout:fragment="content">
+<div class="container">
+	<h2 class="text-center">주문취소요청이 완료되었습니다.</h2>
+	<p class="text-center">취소사유: [[${cancelReason}]]</p>
+	<p class="text-center">
+		<button type="button" class="btn btn-primary" onclick="location.href='/order/list'">주문 목록</button>
+		<button type="button" class="btn btn-info" onclick="location.href='/product/list'">상품 목록</button>
+	</p>
+</div>
+</th:block>
+</html>

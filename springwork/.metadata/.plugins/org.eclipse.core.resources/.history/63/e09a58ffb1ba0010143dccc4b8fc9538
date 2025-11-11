@@ -1,0 +1,169 @@
+package com.example.sweethome.kakao;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import com.example.sweethome.kakao.dto.KakaoProfile;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.netty.handler.codec.http.HttpHeaderValues;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+//@RequiredArgsConstructor
+@Service
+public class KakaoService {
+//    private final String KAUTH_TOKEN_URL_HOST;
+//    private final String KAUTH_USER_URL_HOST;
+    
+    @Value("${kakao.client_id}")
+    private String client_id;
+    
+    @Value("${kakao.redirect_uri}")
+    private String redirect_uri;
+    
+    @Value("${kakao.logout_redirect_uri}")
+    private String logout_redirect_uri;
+    
+    private final String TOKEN_URL = "https://kauth.kakao.com/oauth/token";
+    private final String USER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
+    private final String UNLINK_URL = "https://kapi.kakao.com/v1/user/unlink";
+
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+//    @Autowired
+//    public KakaoService(
+//    		@Value("${kakao.client_id}") String clientId) {
+//    	this.clientId = clientId;
+//    	//this.redirectUri = redirectUri;
+//    	KAUTH_TOKEN_URL_HOST ="https://kauth.kakao.com";
+//    	KAUTH_USER_URL_HOST = "https://kapi.kakao.com";
+//    }
+
+    public String getAccessTokenFromKakao(String code) {
+        
+//        KakaoTokenResponseDto kakaoTokenResponseDto = WebClient.create(KAUTH_TOKEN_URL_HOST).post()
+//        		.uri("/oauth/token")
+//                .header(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded")
+//                .bodyValue("grant_type=authorization_code" +
+//                           "&client_id=d0c2283e342f9018d35eb38e5f51fc04" +
+//                           "&redirect_uri=" + redirect_uri + 
+//                           "&code=" + code)
+//                .retrieve()
+//                //TODO : Custom Exception
+//                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Invalid Parameter")))
+//                .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException("Internal Server Error")))
+//                .bodyToMono(KakaoTokenResponseDto.class)
+//                .block();
+//    	
+//    	return kakaoTokenResponseDto.getAccessToken();
+    	
+    	try {
+            String body = "grant_type=authorization_code" +
+                    "&client_id=" + client_id +
+                    "&redirect_uri=" + redirect_uri +
+                    "&code=" + code;
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+            HttpEntity<String> entity = new HttpEntity<>(body, headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(
+                    TOKEN_URL, HttpMethod.POST, entity, String.class);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                KakaoTokenResponseDto kakaoTokenResponseDto =
+                        objectMapper.readValue(response.getBody(), KakaoTokenResponseDto.class);
+                log.info("✅ Access Token 발급 완료");
+                return kakaoTokenResponseDto.getAccessToken();
+            } else {
+                log.error("❌ 카카오 토큰 요청 실패: {}", response.getBody());
+                throw new RuntimeException("Kakao token request failed");
+            }
+        } catch (Exception e) {
+            log.error("❌ getAccessTokenFromKakao() 실패", e);
+            throw new RuntimeException("카카오 토큰 요청 실패", e);
+        }
+    }
+    
+    
+    public KakaoProfile getUserInfo(String accessToken) {
+
+//    	KakaoProfile userInfo = WebClient.create(KAUTH_USER_URL_HOST)
+//                .get()
+//                .uri(uriBuilder -> uriBuilder
+//                        .scheme("https")
+//                        .path("/v2/user/me")
+//                        .build(true))
+//                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken) // access token 인가
+//                .header(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
+//                .retrieve()
+//                .bodyToMono(KakaoProfile.class)
+//                .block();
+//
+//        return userInfo;
+    	
+    	try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + accessToken);
+
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(
+                    USER_INFO_URL, HttpMethod.GET, entity, String.class);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                KakaoProfile userInfo =
+                        objectMapper.readValue(response.getBody(), KakaoProfile.class);
+                log.info("✅ 카카오 사용자 정보 조회 성공");
+                return userInfo;
+            } else {
+                log.error("❌ 사용자 정보 요청 실패: {}", response.getBody());
+                throw new RuntimeException("Kakao user info request failed");
+            }
+        } catch (Exception e) {
+            log.error("❌ getUserInfo() 실패", e);
+            throw new RuntimeException("카카오 사용자 정보 요청 실패", e);
+        }
+    }
+    
+    public void unlinkKakao(String accessToken) {
+//        WebClient.create(KAUTH_USER_URL_HOST)
+//                .post()
+//                .uri("/v1/user/unlink")
+//                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+//                .retrieve()
+//                .bodyToMono(String.class)
+//                .block();
+//        log.info("[KakaoService] Kakao account unlinked successfully");
+    	
+    	try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + accessToken);
+
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(
+                    UNLINK_URL, HttpMethod.POST, entity, String.class);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                log.info("✅ Kakao 계정 연결 해제 성공");
+            } else {
+                log.error("❌ Kakao unlink 실패: {}", response.getBody());
+            }
+        } catch (Exception e) {
+            log.error("❌ unlinkKakao() 실패", e);
+        }
+    }
+}

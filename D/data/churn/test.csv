@@ -1,0 +1,6 @@
+customer_id,age,gender,tenure_months,monthly_charges,contract_type,payment_method,internet_service
+1001,23,여성,2,68090,월별 계약,카드,100M
+1002,34,남성,12,97500,1년 계약,계좌 이체,500M
+1003,45,여성,36,85150,2년 계약,카드,1G
+1004,29,남성,6,104260,월별 계약,계좌 이체,100M
+1005,52,여성,48,117000,2년 계약,계좌 이체,1G

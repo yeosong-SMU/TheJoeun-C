@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;CartApi.java&apos; to &apos;flette/src/main/java/com.example.flette.api.backup&apos;&#x0D;&#x0A;- Original project: &apos;flette&apos;&#x0D;&#x0A;- Destination element: &apos;flette/src/main/java/com.example.flette.api.backup&apos;&#x0D;&#x0A;- Original element: &apos;com.example.flette.api.CartApi.java&apos;" description="Copy compilation unit" destination="/src\/main\/java=/gradle_scope=/main=/=/gradle_used_by_scope=/main,test=/&lt;com.example.flette.api.backup" element1="/src\/main\/java=/gradle_scope=/main=/=/gradle_used_by_scope=/main,test=/&lt;com.example.flette.api{CartApi.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1755500005209" units="1" version="1.0"/>
+</session>

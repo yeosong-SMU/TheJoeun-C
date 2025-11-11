@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/mylayout}">
+<th:block layout:fragment="content">
+<script>
+function inputReason(orderIdx) {
+	$("#p1").css("visibility", "visible");
+}
+function cancelOrder(orderIdx) {
+	if(confirm("취소하시겠습니까?")) {
+		document.form1.action="/order/cancel/" + orderIdx;
+		document.form1.submit();
+	}
+}
+</script>
+
+<div class="container">
+<h2 class="text-center">주문 내역</h2>
+<div class="mb-3">
+	처리상태 : [[${dto.status}]]
+	<span th:if="${dto.status == '주문취소요청'}">
+		(취소사유 : [[${dto.cancelReason}]])
+	</span>
+	<br>
+	결제방법 : [[${dto.method}]]<br>
+	카드번호 : [[${dto.cardNumber}]]<br>
+	배송주소 : [[${dto.address1}]] [[${dto.address2}]] ( 우편번호 [[${dto.zipcode}]] )<br>
+	전화번호 : [[${dto.tel}]]
+</div>
+
+<h3 class="text-center">주문 상세 내역</h3>
+<table class="table table-hover">
+	<tr>
+		<td>상품명</td>
+		<td>가격</td>
+		<td>수량</td>
+		<td>금액</td>
+	</tr>
+	<tr th:each="row:${detailList}">
+		<td>[[${row.product.productName}]]</td>
+		<td>[[${row.product.price}]]</td>
+		<td>[[${row.amount}]]</td>
+		<td>[[${row.product.price * row.amount}]]</td>
+	</tr>
+	<tr>
+		<td colspan="3" class="text-center">
+			주문금액 : [[${dto.money}]] , 
+			배송료 : [[${dto.delivery}]] , 
+			총합계 : [[${dto.totalMoney}]]
+		</td>
+	</tr>
+</table>
+
+<div class="text-center">
+	<button type="button" class="btn btn-primary" onclick="location.href='/order/list'">주문 목록</button>
+	<button type="button" th:if="${dto.status == '주문접수'}" class="btn btn-info" th:onclick="inputReason(this.getAttribute('data'))" th:data="${dto.orderIdx}">주문 취소</button>
+	<button type="button" class="btn btn-info" onclick="location.href='/product/list'">상품 목록</button>
+	
+	<div id="p1" class="text-center" style="visibility:hidden">
+	<form name="form1" method="post">
+		<input type="hidden" name="orderIdx" th:value="${dto.orderIdx}">
+		취소 사유 : <input name="cancelReason">
+		<button type="button" th:if="${dto.status == '주문접수'}" class="btn btn-danger" th:onclick="cancelOrder(this.getAttribute('data'))" th:data="${dto.orderIdx}">주문취소</button>
+	</form>
+	</div>
+</div>
+</div>
+</th:block>
+</html>

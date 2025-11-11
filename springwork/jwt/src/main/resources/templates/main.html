@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Main</title>
+</head>
+<body>
+<h2 th:text="'안녕하세요, ' + ${username} + '님!'">안녕하세요</h2>
+<form method="post" action="/logout">
+	<button>로그아웃</button>
+</form>
+</body>
+</html>

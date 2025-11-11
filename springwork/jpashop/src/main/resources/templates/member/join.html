@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/mylayout}">
+<th:block layout:fragment="content">
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script>
+$(function() {
+	$("#btnLogin").click(function() {
+		const userid=$("#userid").val();
+		const passwd=$("#passwd").val();
+		if(userid == "") {
+			alert("아이디를 입력하세요.");
+			$("#userid").focus();
+			return;
+		}
+		if(passwd == "") {
+			alert("비밀번호를 입력하세요.");
+			$("#passwd").focus();
+			return;
+		}
+		document.form1.action="/member/login_check";
+		document.form1.submit();
+	});
+	$("#btnJoin").click(function() {
+		document.form1.action="/member/insert_member";
+		document.form1.submit();
+	});
+});
+function showPostcode() {
+	new daum.Postcode({
+		oncomplete : function(data) {
+			let fullAddr = "";
+			let extraAddr = "";
+			if(data.userSelectedType === "R") {
+				fullAddr = data.roadAddress;
+			} else {
+				fullAddr = data.jibunAddress;
+			}
+			if(data.userSelectedType === "R") {
+				if(data.bname !== "") {
+					extraAddr += data.bname;
+				}
+				if(data.buildingName !== "") {
+					extraAddr += (extraAddr !== "" ? ", "
+							+ data.buildingName : data.buildingName);
+				}
+				fullAddr += (extraAddr !== "" ? " (" + extraAddr + ")" : "");
+			}
+			document.getElementById("zipcode").value = data.zonecode;
+			document.getElementById("address1").value = fullAddr;
+			document.getElementById("address2").focus();
+		}
+	}).open();
+}
+</script>
+<div class="container-fluid">
+	<form name="form1" method="post">
+		<div class="mb-3">
+			<label for="userid" class="form-label">아이디</label>
+			<input class="form-control" id="userid" name="userid">
+		</div>
+		<div class="mb-3">
+			<label for="passwd" class="form-label">비밀번호</label>
+			<input type="password" class="form-control" id="passwd" name="passwd">
+		</div>
+		<div class="mb-3">
+			<label for="name" class="form-label">이름</label>
+			<input class="form-control" id="name" name="name">
+		</div>
+		<div class="mb-3">
+			<label for="zipcode" class="form-label">우편번호</label>
+			<input class="form-control" id="zipcode" name="zipcode" readonly>
+			<button type="button" onclick="showPostcode()" class="btn btn-info">우편번호 찾기</button>
+		</div>
+		<div class="mb-3">
+			<label for="address1" class="form-label">주소</label>
+			<input class="form-control" id="address1" name="address1">
+		</div>
+		<div class="mb-3">
+			<label for="address2" class="form-label">상세주소</label>
+			<input class="form-control" id="address2" name="address2">
+		</div>
+		<div class="mb-3">
+			<label for="tel" class="form-label">전화</label>
+			<input class="form-control" id="tel" name="tel">
+		</div>
+		
+		<button type="button" id="btnJoin" class="btn btn-primary">회원가입</button>
+	</form>
+</div>
+</th:block>
+</html>

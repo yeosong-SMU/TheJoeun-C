@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>고객 등록</title>
+</head>
+<body>
+<h1>고객 등록</h1>
+
+<form action="/write" method="post" th:object="${customer}">
+	<div>
+		이름: <input type="text" th:field="*{name}" required>
+	</div>
+	<div>
+		전화번호: <input type="text" th:field="*{phone}">
+	</div>
+	<div>
+		이메일: <input type="email" th:field="*{email}">
+	</div>
+	<br>
+	<button type="submit">저장</button>
+	<button type="button" onclick="location.href='/'">목록</button>
+</form>
+</body>
+</html>
